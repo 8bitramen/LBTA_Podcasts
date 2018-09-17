@@ -8,13 +8,36 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        setupViewControllers()
+        
     }
+    
+    //MARK:- Setup Functions
+    
+    func setupViewControllers() {
+        viewControllers = [
+            generateNavigationVontroller(with: FavoritesViewController(), title: "Favorites", image: "favorites"),
+            generateNavigationVontroller(with: SearchViewController(), title: "Search", image: "search"),
+            generateNavigationVontroller(with: DownloadsViewController(), title: "Downloads", image: "downloads")
+        ]
 
-
+    }
+    
+    //MARK:- Helper Functions
+    
+    fileprivate func generateNavigationVontroller(with rootViewController: UIViewController, title: String, image: String) -> UIViewController {
+        let navController = UINavigationController(rootViewController: rootViewController)
+        rootViewController.navigationItem.title = title
+        navController.navigationBar.prefersLargeTitles = true
+        navController.tabBarItem.title = title
+        navController.tabBarItem.image = UIImage(named: image)
+        return navController
+    }
+    
 }
 
