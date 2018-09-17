@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         if let window = self.window {
-            // window.frame = UIScreen.main.bounds
+            window.frame = UIScreen.main.bounds
             window.makeKeyAndVisible()
             window.rootViewController = MainTabBarController()
         }
