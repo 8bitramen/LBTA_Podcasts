@@ -16,13 +16,14 @@ struct Result: Decodable {
         let name: String
         let artistName: String
         let artWork: String
+        let numberOfEpisodes: Int
     
         private enum CodingKeys: String, CodingKey {
             case name = "collectionName"
             case artistName
             case artWork = "artworkUrl30"
+            case numberOfEpisodes = "trackCount"
         }
-        
     }
     
     private enum CodingKeys: String, CodingKey {

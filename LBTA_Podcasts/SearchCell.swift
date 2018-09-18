@@ -10,4 +10,18 @@ import UIKit
 
 class SearchCell: UITableViewCell {
     
+    @IBOutlet weak var artworkImageView: UIImageView!
+    @IBOutlet weak var podcastNameLabel: UILabel!
+    @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var numberOfEPisodesLabel: UILabel!
+    
+    var podcast: Result.Podcast! {
+        didSet {
+            podcastNameLabel.text = podcast.name
+            artistNameLabel.text = podcast.artistName
+            artworkImageView.image = UIImage(named: "favorites")
+            numberOfEPisodesLabel.text = String(podcast.numberOfEpisodes)
+        }
+    }
+    
 }

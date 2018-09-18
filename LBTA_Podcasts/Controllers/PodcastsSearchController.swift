@@ -13,7 +13,7 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
     var results = Result(resultCount: 5,
                          podcasts: [
-                            Result.Podcast(name: "Structures", artistName: "Vlado Velkovski", artWork: ""), Result.Podcast(name: "Algorithms", artistName: "John Travolta", artWork: ""),                                Result.Podcast(name: "Protocols", artistName: "Will Smith", artWork: "")])
+                            Result.Podcast(name: "Structures", artistName: "Vlado Velkovski", artWork: "", numberOfEpisodes: 5), Result.Podcast(name: "Algorithms", artistName: "John Travolta", artWork: "", numberOfEpisodes: 10),                                Result.Podcast(name: "Protocols", artistName: "Will Smith", artWork: "", numberOfEpisodes: 20)])
     
     
     let cellId = "cellId"
@@ -38,7 +38,9 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     fileprivate func setupTableView() {
-        tableView.register(SearchCell.self, forCellReuseIdentifier: cellId)
+//        tableView.register(SearchCell.self, forCellReuseIdentifier: cellId)
+        let nib = UINib(nibName: "PodcastCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
         
     }
     
@@ -62,12 +64,13 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! SearchCell
         let podcast = results.podcasts[indexPath.row]
-        cell.textLabel?.numberOfLines = 0
-        cell.imageView?.image = UIImage(named: "favorites")
-        cell.textLabel?.text = "\(podcast.name)\n\(podcast.artistName)"
-        //        cell.detailTextLabel?.text = podcast.artistName
+        cell.podcast = podcast
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 132
     }
 }
