@@ -8,7 +8,26 @@
 
 import Foundation
 
-struct Podcast {
-    let name: String
-    let artistName: String
+struct Result: Decodable {
+    let resultCount: Int
+    let podcasts: [Podcast]
+    
+    struct Podcast: Decodable {
+        let name: String
+        let artistName: String
+        let artWork: String
+    
+        private enum CodingKeys: String, CodingKey {
+            case name = "collectionName"
+            case artistName
+            case artWork = "artworkUrl30"
+        }
+        
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case resultCount
+        case podcasts = "results"
+    }
+
 }
