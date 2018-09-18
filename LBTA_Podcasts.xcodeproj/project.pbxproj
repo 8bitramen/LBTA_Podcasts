@@ -18,6 +18,7 @@
 		3F6E5CC9214F92600066151E /* DownloadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CC8214F92600066151E /* DownloadsViewController.swift */; };
 		3F6E5CCB214FB6220066151E /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CCA214FB6220066151E /* SearchCell.swift */; };
 		3F6E5CCF214FC3FD0066151E /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CCE214FC3FD0066151E /* Podcast.swift */; };
+		3F6E5CD221510D200066151E /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CD121510D200066151E /* APIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		3F6E5CC8214F92600066151E /* DownloadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewController.swift; sourceTree = "<group>"; };
 		3F6E5CCA214FB6220066151E /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		3F6E5CCE214FC3FD0066151E /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
+		3F6E5CD121510D200066151E /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		B34003314F9BEECDE5FCE8E3 /* Pods-LBTA_Podcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LBTA_Podcasts.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LBTA_Podcasts/Pods-LBTA_Podcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		B35EFCB007DC9718214C45E8 /* Pods_LBTA_Podcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LBTA_Podcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -80,6 +82,7 @@
 		3F6E5CB1214F895B0066151E /* LBTA_Podcasts */ = {
 			isa = PBXGroup;
 			children = (
+				3F6E5CD021510D050066151E /* API */,
 				3F6E5CCD214FC3C40066151E /* Model */,
 				3F6E5CCC214FC3A00066151E /* Controllers */,
 				3F6E5CB2214F895B0066151E /* AppDelegate.swift */,
@@ -109,6 +112,14 @@
 				3F6E5CCE214FC3FD0066151E /* Podcast.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		3F6E5CD021510D050066151E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				3F6E5CD121510D200066151E /* APIService.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		FC3DBC3B9507370B796F4964 /* Frameworks */ = {
@@ -245,6 +256,7 @@
 				3F6E5CB5214F895B0066151E /* MainTabBarController.swift in Sources */,
 				3F6E5CC5214F8C680066151E /* FavoritesViewController.swift in Sources */,
 				3F6E5CC7214F92220066151E /* PodcastsSearchController.swift in Sources */,
+				3F6E5CD221510D200066151E /* APIService.swift in Sources */,
 				3F6E5CB3214F895B0066151E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,31 +46,16 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
-        let searchText = "https://itunes.apple.com/search?term=\(searchText)&media=podcast"
-        if let url = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            Alamofire.request(url).responseData { (dataResponse) in
-                if let err = dataResponse.error {
-                    print("Failed the fetching the podcasts from iTunes server!!", err)
-                    return
-                }
-                
-                guard let data = dataResponse.data else { return }
-                let jsonString = String(data: data, encoding: .utf8)
-                print(jsonString ?? "")
-                
-                let jsonDecoder = JSONDecoder()
-                do {
-                    self.results = try jsonDecoder.decode(Result.self, from: data)
-                    self.tableView.reloadData()
-                } catch {
-                    print("Error decoding JSON result!")
-                }
-            }
-        }
         
+        APIService.shared.fetchPodcasts(searchText: searchText) {
+            results in
+            self.results = results
+            self.tableView.reloadData()
+        }
+
     }
     
-    //MARL:- UITableView Stuff
+    //MARK:- UITableView Stuff
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.podcasts.count
