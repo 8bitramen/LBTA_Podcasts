@@ -21,8 +21,8 @@ class SearchCell: UITableViewCell {
             podcastNameLabel.text = podcast.name
             artistNameLabel.text = podcast.artistName
 //            artworkImageView.image = UIImage(named: "favorites")
-            numberOfEPisodesLabel.text = String(podcast.numberOfEpisodes)
-            let url = URL(string: podcast.artWork)
+            numberOfEPisodesLabel.text = String(podcast.numberOfEpisodes ?? 0)
+            let url = URL(string: podcast.artWork!)
             artworkImageView.sd_setImage(with: url, completed: nil)
         }
     }
