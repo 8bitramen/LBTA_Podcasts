@@ -20,6 +20,7 @@
 		3F6E5CCF214FC3FD0066151E /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CCE214FC3FD0066151E /* Podcast.swift */; };
 		3F6E5CD221510D200066151E /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CD121510D200066151E /* APIService.swift */; };
 		3F6E5CD821511BD50066151E /* PodcastCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F6E5CD721511BD50066151E /* PodcastCell.xib */; };
+		3F6E5CDA215250520066151E /* EpisodesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CD9215250520066151E /* EpisodesController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		3F6E5CCE214FC3FD0066151E /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		3F6E5CD121510D200066151E /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		3F6E5CD721511BD50066151E /* PodcastCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PodcastCell.xib; sourceTree = "<group>"; };
+		3F6E5CD9215250520066151E /* EpisodesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesController.swift; sourceTree = "<group>"; };
 		B34003314F9BEECDE5FCE8E3 /* Pods-LBTA_Podcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LBTA_Podcasts.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LBTA_Podcasts/Pods-LBTA_Podcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		B35EFCB007DC9718214C45E8 /* Pods_LBTA_Podcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LBTA_Podcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -105,6 +107,7 @@
 				3F6E5CC4214F8C680066151E /* FavoritesViewController.swift */,
 				3F6E5CC6214F92220066151E /* PodcastsSearchController.swift */,
 				3F6E5CC8214F92600066151E /* DownloadsViewController.swift */,
+				3F6E5CD9215250520066151E /* EpisodesController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				3F6E5CC7214F92220066151E /* PodcastsSearchController.swift in Sources */,
 				3F6E5CD221510D200066151E /* APIService.swift in Sources */,
 				3F6E5CB3214F895B0066151E /* AppDelegate.swift in Sources */,
+				3F6E5CDA215250520066151E /* EpisodesController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
