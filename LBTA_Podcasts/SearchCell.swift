@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SearchCell: UITableViewCell {
     
@@ -19,8 +20,10 @@ class SearchCell: UITableViewCell {
         didSet {
             podcastNameLabel.text = podcast.name
             artistNameLabel.text = podcast.artistName
-            artworkImageView.image = UIImage(named: "favorites")
+//            artworkImageView.image = UIImage(named: "favorites")
             numberOfEPisodesLabel.text = String(podcast.numberOfEpisodes)
+            let url = URL(string: podcast.artWork)
+            artworkImageView.sd_setImage(with: url, completed: nil)
         }
     }
     

@@ -21,7 +21,7 @@ struct Result: Decodable {
         private enum CodingKeys: String, CodingKey {
             case name = "collectionName"
             case artistName
-            case artWork = "artworkUrl30"
+            case artWork = "artworkUrl600"
             case numberOfEpisodes = "trackCount"
         }
     }

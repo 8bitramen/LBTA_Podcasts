@@ -11,9 +11,7 @@ import Alamofire
 
 class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
-    var results = Result(resultCount: 5,
-                         podcasts: [
-                            Result.Podcast(name: "Structures", artistName: "Vlado Velkovski", artWork: "", numberOfEpisodes: 5), Result.Podcast(name: "Algorithms", artistName: "John Travolta", artWork: "", numberOfEpisodes: 10),                                Result.Podcast(name: "Protocols", artistName: "Will Smith", artWork: "", numberOfEpisodes: 20)])
+    var results = Result(resultCount: 0, podcasts: [])
     
     
     let cellId = "cellId"
@@ -38,9 +36,10 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     fileprivate func setupTableView() {
-//        tableView.register(SearchCell.self, forCellReuseIdentifier: cellId)
+        //        tableView.register(SearchCell.self, forCellReuseIdentifier: cellId)
         let nib = UINib(nibName: "PodcastCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellId)
+        tableView.tableFooterView = UIView()
         
     }
     
@@ -54,7 +53,7 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
             self.results = results
             self.tableView.reloadData()
         }
-
+        
     }
     
     //MARK:- UITableView Stuff
@@ -73,4 +72,25 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 132
     }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return results.podcasts.count > 0 ? 0 : 250
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        label.textAlignment = .center
+        
+        if let searchBarText = searchController.searchBar.text {
+            if results.podcasts.count == 0 && searchBarText.isEmpty {
+                label.text = "Please enter a Search Term"
+            } else if results.podcasts.count == 0 && !searchBarText.isEmpty {
+                label.text = "No Results Found"
+            }
+        }
+        return label
+        
+    }
+    
 }
