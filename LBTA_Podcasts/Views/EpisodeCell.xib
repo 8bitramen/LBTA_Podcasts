@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="112" id="QTQ-F4-s67" customClass="EpisodeCell" customModule="LBTA_Podcasts" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="528" height="112"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QTQ-F4-s67" id="AKW-tf-VWG">
+                <rect key="frame" x="0.0" y="0.0" width="528" height="111.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="downloads" translatesAutoresizingMaskIntoConstraints="NO" id="GDZ-e9-zoV">
+                        <rect key="frame" x="20" y="6" width="100" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="7EZ-cm-VrI"/>
+                            <constraint firstAttribute="height" constant="100" id="Qco-1p-EFy"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Pb3-Rl-OvM">
+                        <rect key="frame" x="128" y="19" width="380" height="74"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Episode Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5z-7Y-Jzm">
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.53553299492385786" green="0.03322765754993786" blue="0.37802615814025109" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Episode Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sc5-Ez-SB7">
+                                <rect key="frame" x="0.0" y="27.5" width="380" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Episode Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAV-nZ-fev">
+                                <rect key="frame" x="0.0" y="57" width="380" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Pb3-Rl-OvM" firstAttribute="leading" secondItem="GDZ-e9-zoV" secondAttribute="trailing" constant="8" id="1Vw-4X-BJ9"/>
+                    <constraint firstItem="GDZ-e9-zoV" firstAttribute="centerY" secondItem="AKW-tf-VWG" secondAttribute="centerY" id="Etv-sw-gOe"/>
+                    <constraint firstItem="Pb3-Rl-OvM" firstAttribute="centerY" secondItem="AKW-tf-VWG" secondAttribute="centerY" id="LYb-aH-yMf"/>
+                    <constraint firstItem="GDZ-e9-zoV" firstAttribute="leading" secondItem="AKW-tf-VWG" secondAttribute="leadingMargin" id="TNH-qi-hdu"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Pb3-Rl-OvM" secondAttribute="trailing" id="fxM-KR-Jdb"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="episodeDate" destination="l5z-7Y-Jzm" id="DUF-ya-GKc"/>
+                <outlet property="episodeDescription" destination="nAV-nZ-fev" id="paG-FD-dat"/>
+                <outlet property="episodeImageView" destination="GDZ-e9-zoV" id="8H8-eT-Wt7"/>
+                <outlet property="episodeNameLabel" destination="Sc5-Ez-SB7" id="3uQ-km-vLu"/>
+            </connections>
+            <point key="canvasLocation" x="550.39999999999998" y="17.991004497751124"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="downloads" width="48" height="48"/>
+    </resources>
+</document>
