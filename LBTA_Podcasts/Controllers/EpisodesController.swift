@@ -39,6 +39,7 @@ class EpisodesController: UITableViewController {
         tableView.tableFooterView = UIView()
     }
     
+    
     //MARK:- Fetching episodes
     
     fileprivate func fetchEpisodes() {
@@ -72,6 +73,19 @@ class EpisodesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 132
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = self.episodes[indexPath.row]
+//        let episodePlayerController = EpisodePlayerController()
+//        navigationController?.pushViewController(episodePlayerController, animated: true)
+
+        let window = UIApplication.shared.keyWindow
+        let playerDetailsView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+            playerDetailsView.frame = self.view.frame
+            playerDetailsView.episode = episode
+            window?.addSubview(playerDetailsView)
+        
     }
     
 }
