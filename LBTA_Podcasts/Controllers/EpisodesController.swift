@@ -11,9 +11,9 @@ import FeedKit
 
 class EpisodesController: UITableViewController {
     
-//    struct Episode {
-//        let title: String
-//    }
+    //    struct Episode {
+    //        let title: String
+    //    }
     
     var episodes = [Episode]()
     
@@ -45,35 +45,16 @@ class EpisodesController: UITableViewController {
         print(podcast.feedUrl ?? "")
         
         guard let feedUrl = podcast.feedUrl else { return }
-        let secureFeedUrl = feedUrl.contains("https") ? feedUrl : feedUrl.replacingOccurrences(of: "http", with: "https")
-        guard let url = URL(string: secureFeedUrl) else { return }
         
-        let parser = FeedParser(URL: url)
-        
-        parser.parseAsync { (result) in
-            print("succesfully parse feed: ", result.isSuccess)
-            
-            switch result {
-            case let .rss(feed):
-                print(feed)
-                var episodes = [Episode]()
-                feed.items?.forEach { (feedItem) in
-                    let episode = Episode(feedItem: feedItem)
-                    episodes.append(episode)
-                }
+        APIService.shared.fetchEpisodes(feedURL: feedUrl) {
+            (episodes) in
+            self.episodes = episodes
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
                 
-                self.episodes = episodes
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case let .failure(error):
-                print("Failed to parse feed: ", error)
-            default:
-                print("found a feed ...")
-                break
             }
+            
         }
-        
     }
     
     //MARK:- TableView Methods

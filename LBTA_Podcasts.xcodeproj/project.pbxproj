@@ -24,6 +24,8 @@
 		3F6E5CDC215386B80066151E /* EpisodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDB215386B80066151E /* EpisodeCell.xib */; };
 		3F6E5CDE215387000066151E /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDD215387000066151E /* EpisodeCell.swift */; };
 		3F6E5CE0215389BB0066151E /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDF215389BB0066151E /* Episode.swift */; };
+		3FB6CC542154D40900B5F991 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB6CC532154D40900B5F991 /* String.swift */; };
+		3FB6CC562154D5FD00B5F991 /* RSSFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB6CC552154D5FD00B5F991 /* RSSFeed.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		3F6E5CDB215386B80066151E /* EpisodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EpisodeCell.xib; sourceTree = "<group>"; };
 		3F6E5CDD215387000066151E /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		3F6E5CDF215389BB0066151E /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
+		3FB6CC532154D40900B5F991 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		3FB6CC552154D5FD00B5F991 /* RSSFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSFeed.swift; sourceTree = "<group>"; };
 		B34003314F9BEECDE5FCE8E3 /* Pods-LBTA_Podcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LBTA_Podcasts.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LBTA_Podcasts/Pods-LBTA_Podcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		B35EFCB007DC9718214C45E8 /* Pods_LBTA_Podcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LBTA_Podcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -92,6 +96,7 @@
 		3F6E5CB1214F895B0066151E /* LBTA_Podcasts */ = {
 			isa = PBXGroup;
 			children = (
+				3FB6CC522154D3F000B5F991 /* Extensions */,
 				3F6E5CD621511B900066151E /* Views */,
 				3F6E5CD021510D050066151E /* API */,
 				3F6E5CCD214FC3C40066151E /* Model */,
@@ -143,6 +148,15 @@
 				3F6E5CCA214FB6220066151E /* SearchCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		3FB6CC522154D3F000B5F991 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3FB6CC552154D5FD00B5F991 /* RSSFeed.swift */,
+				3FB6CC532154D40900B5F991 /* String.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		FC3DBC3B9507370B796F4964 /* Frameworks */ = {
@@ -279,12 +293,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FB6CC562154D5FD00B5F991 /* RSSFeed.swift in Sources */,
 				3F6E5CC9214F92600066151E /* DownloadsViewController.swift in Sources */,
 				3F6E5CCF214FC3FD0066151E /* Podcast.swift in Sources */,
 				3F6E5CCB214FB6220066151E /* SearchCell.swift in Sources */,
 				3F6E5CB5214F895B0066151E /* MainTabBarController.swift in Sources */,
 				3F6E5CC5214F8C680066151E /* FavoritesViewController.swift in Sources */,
 				3F6E5CE0215389BB0066151E /* Episode.swift in Sources */,
+				3FB6CC542154D40900B5F991 /* String.swift in Sources */,
 				3F6E5CDE215387000066151E /* EpisodeCell.swift in Sources */,
 				3F6E5CC7214F92220066151E /* PodcastsSearchController.swift in Sources */,
 				3F6E5CD221510D200066151E /* APIService.swift in Sources */,
