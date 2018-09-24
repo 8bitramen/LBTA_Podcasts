@@ -125,10 +125,12 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="oIy-2o-cc9"/>
             <connections>
+                <outlet property="currentDurationLabel" destination="4CT-c7-bxa" id="uk8-XZ-yAH"/>
                 <outlet property="episodeImageView" destination="rx9-0K-AJC" id="yWQ-nP-gbr"/>
                 <outlet property="nameLabel" destination="hoY-ah-VUO" id="iif-ud-2ET"/>
                 <outlet property="playPauseButton" destination="2aI-k7-qHJ" id="XQO-7b-4JN"/>
                 <outlet property="titleLabel" destination="62l-hT-aWz" id="50R-Jn-1Wv"/>
+                <outlet property="totalDurationLabel" destination="E6Y-jK-e6e" id="MtL-Ge-vFD"/>
             </connections>
             <point key="canvasLocation" x="404" y="-97"/>
         </view>

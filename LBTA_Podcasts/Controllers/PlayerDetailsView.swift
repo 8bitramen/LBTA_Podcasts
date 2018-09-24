@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 import AVKit
 
-class PlayerDetailsView: UIView {
+class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     var episode: Episode!  {
         didSet {
@@ -23,10 +23,43 @@ class PlayerDetailsView: UIView {
     }
     
     var isPlaying = true
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        let time = CMTime(value: 1, timescale: 3)
+        let times = [NSValue(time: time)]
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+            print("Started playing the episode ...")
+            self.enlargeEpisodeImageView()
+        }
+    }
 
     @IBAction func dismissButton(_ sender: UIButton) {
-        player.pause()
-        self.removeFromSuperview()
+//        player.pause()
+//        self.removeFromSuperview()
+        
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
+        }) { (_) in
+            self.removeFromSuperview()
+        }
+        
+    }
+    
+    fileprivate func enlargeEpisodeImageView() {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.episodeImageView.transform = .identity
+            }, completion: nil)
+    }
+    
+    fileprivate func shrinkEpisodeImageView() {
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        }, completion: nil)
+
+
     }
     
     @IBAction func playOrPause(sender: UIButton) {
@@ -36,10 +69,14 @@ class PlayerDetailsView: UIView {
             player.pause()
             playPauseButton.setImage(UIImage(named: "play"), for: .normal)
             print("Playing paused ...")
+            shrinkEpisodeImageView()
+            
         } else {
             player.play()
             print("Playing resumed ...")
             playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            enlargeEpisodeImageView()
+            
         }
 //        isPlaying = !isPlaying
 
@@ -50,12 +87,24 @@ class PlayerDetailsView: UIView {
     
     @IBOutlet weak var titleLabel: UILabel!
     
-    @IBOutlet weak var episodeImageView: UIImageView!
+    @IBOutlet weak var episodeImageView: UIImageView! {
+        didSet {
+            episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            episodeImageView.layer.cornerRadius = 20
+            episodeImageView.clipsToBounds = true
+        }
+    }
     
     @IBOutlet weak var nameLabel: UILabel!
     
     
     @IBOutlet weak var playPauseButton: UIButton!
+    
+    @IBOutlet weak var currentDurationLabel: UILabel!
+    
+    
+    @IBOutlet weak var totalDurationLabel: UILabel!
+    
     
     let player: AVPlayer = {
         let avPlayer = AVPlayer()
