@@ -44,17 +44,17 @@
                                 <constraint firstAttribute="height" constant="26" id="mBh-yg-A5r"/>
                             </constraints>
                         </slider>
-                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qXR-Hn-j1R">
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qXR-Hn-j1R">
                             <rect key="frame" x="0.0" y="464" width="382" height="24"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4CT-c7-bxa">
-                                    <rect key="frame" x="0.0" y="0.0" width="329.33333333333331" height="24"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4CT-c7-bxa">
+                                    <rect key="frame" x="0.0" y="0.0" width="191" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="23:59:59" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6Y-jK-e6e">
-                                    <rect key="frame" x="329.33333333333331" y="0.0" width="52.666666666666686" height="24"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23:59:59" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6Y-jK-e6e">
+                                    <rect key="frame" x="191" y="0.0" width="191" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -79,17 +79,23 @@
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="eLb-bo-pFp">
                             <rect key="frame" x="0.0" y="542" width="382" height="181"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kjC-JQ-B18">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kjC-JQ-B18">
                                     <rect key="frame" x="0.0" y="0.0" width="127.33333333333333" height="181"/>
-                                    <state key="normal" title="Button" image="rewind15"/>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <state key="normal" image="rewind15"/>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2aI-k7-qHJ">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2aI-k7-qHJ">
                                     <rect key="frame" x="127.33333333333334" y="0.0" width="127.33333333333334" height="181"/>
-                                    <state key="normal" title="Button" image="play"/>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <state key="normal" image="pause"/>
+                                    <connections>
+                                        <action selector="playOrPauseWithSender:" destination="sfJ-PH-afx" eventType="touchUpInside" id="bQE-FH-G2w"/>
+                                    </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fnk-uz-Uao">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fnk-uz-Uao">
                                     <rect key="frame" x="254.66666666666671" y="0.0" width="127.33333333333334" height="181"/>
-                                    <state key="normal" title="Button" image="forward15"/>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <state key="normal" image="forward15"/>
                                 </button>
                             </subviews>
                         </stackView>
@@ -97,10 +103,10 @@
                             <rect key="frame" x="0.0" y="727" width="382" height="75"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lowvolume" translatesAutoresizingMaskIntoConstraints="NO" id="uke-mY-pQS">
-                                    <rect key="frame" x="0.0" y="0.0" width="39" height="75"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="19" height="75"/>
                                 </imageView>
                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="koM-Jy-An1">
-                                    <rect key="frame" x="37" y="0.0" width="272" height="76"/>
+                                    <rect key="frame" x="17" y="0.0" width="292" height="76"/>
                                 </slider>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highvolume" translatesAutoresizingMaskIntoConstraints="NO" id="W6g-O7-BdQ">
                                     <rect key="frame" x="307" y="0.0" width="75" height="75"/>
@@ -132,7 +138,7 @@
         <image name="forward15" width="75" height="75"/>
         <image name="highvolume" width="75" height="75"/>
         <image name="lowvolume" width="75" height="75"/>
-        <image name="play" width="75" height="75"/>
+        <image name="pause" width="75" height="75"/>
         <image name="rewind15" width="75" height="75"/>
     </resources>
 </document>
