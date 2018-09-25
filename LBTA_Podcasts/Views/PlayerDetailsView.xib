@@ -38,22 +38,25 @@
                                 <constraint firstAttribute="width" secondItem="rx9-0K-AJC" secondAttribute="height" id="qj5-uA-LfS"/>
                             </constraints>
                         </imageView>
-                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="H06-xy-dDZ">
+                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="H06-xy-dDZ">
                             <rect key="frame" x="-2" y="434" width="386" height="27"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="26" id="mBh-yg-A5r"/>
                             </constraints>
+                            <connections>
+                                <action selector="slider:" destination="sfJ-PH-afx" eventType="valueChanged" id="85p-Mw-4gb"/>
+                            </connections>
                         </slider>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qXR-Hn-j1R">
                             <rect key="frame" x="0.0" y="464" width="382" height="24"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4CT-c7-bxa">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4CT-c7-bxa">
                                     <rect key="frame" x="0.0" y="0.0" width="191" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23:59:59" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6Y-jK-e6e">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--:--" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6Y-jK-e6e">
                                     <rect key="frame" x="191" y="0.0" width="191" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -103,10 +106,10 @@
                             <rect key="frame" x="0.0" y="727" width="382" height="75"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lowvolume" translatesAutoresizingMaskIntoConstraints="NO" id="uke-mY-pQS">
-                                    <rect key="frame" x="0.0" y="0.0" width="19" height="75"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="3" height="75"/>
                                 </imageView>
                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="koM-Jy-An1">
-                                    <rect key="frame" x="17" y="0.0" width="292" height="76"/>
+                                    <rect key="frame" x="1" y="0.0" width="308" height="76"/>
                                 </slider>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highvolume" translatesAutoresizingMaskIntoConstraints="NO" id="W6g-O7-BdQ">
                                     <rect key="frame" x="307" y="0.0" width="75" height="75"/>
@@ -129,6 +132,7 @@
                 <outlet property="episodeImageView" destination="rx9-0K-AJC" id="yWQ-nP-gbr"/>
                 <outlet property="nameLabel" destination="hoY-ah-VUO" id="iif-ud-2ET"/>
                 <outlet property="playPauseButton" destination="2aI-k7-qHJ" id="XQO-7b-4JN"/>
+                <outlet property="slider" destination="H06-xy-dDZ" id="Rmo-MW-gma"/>
                 <outlet property="titleLabel" destination="62l-hT-aWz" id="50R-Jn-1Wv"/>
                 <outlet property="totalDurationLabel" destination="E6Y-jK-e6e" id="MtL-Ge-vFD"/>
             </connections>

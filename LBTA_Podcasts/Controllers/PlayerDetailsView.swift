@@ -25,8 +25,26 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     var isPlaying = true
     
     
+    fileprivate func observePlayerCurrentTime() {
+        let interval = CMTimeMake(value: 1, timescale: 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+            
+            self.currentDurationLabel.text = time.toDisplayString()
+            self.totalDurationLabel.text = self.player.currentItem?.duration.toDisplayString()
+            self.updateCurrentTimeSLider()
+            
+        }
+    }
+    
+    func updateCurrentTimeSLider() {
+        let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
+        slider.value = Float(percentage)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        observePlayerCurrentTime()
         
         let time = CMTime(value: 1, timescale: 3)
         let times = [NSValue(time: time)]
@@ -104,6 +122,29 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     
     @IBOutlet weak var totalDurationLabel: UILabel!
+    
+    
+    @IBAction func slider(_ sender: UISlider) {
+        
+        print(sender.value)
+        
+        let currentTime = CMTimeGetSeconds(player.currentTime())
+        let totalDuration = CMTimeGetSeconds((player.currentItem?.duration)!)
+        
+        let seekToTime = Double(currentTime / totalDuration)
+        
+        
+
+        player.currentItem?.seek(to: CMTime(seconds: seekToTime, preferredTimescale: 2), completionHandler: { (completed) in
+                self.slider.value = Float(seekToTime)
+        })
+        
+    }
+    
+    
+    @IBOutlet weak var slider: UISlider!
+    
+    
     
     
     let player: AVPlayer = {
