@@ -44,7 +44,7 @@
                                 <constraint firstAttribute="height" constant="26" id="mBh-yg-A5r"/>
                             </constraints>
                             <connections>
-                                <action selector="slider:" destination="sfJ-PH-afx" eventType="valueChanged" id="85p-Mw-4gb"/>
+                                <action selector="handleCurrentTimeSlideChange:" destination="sfJ-PH-afx" eventType="valueChanged" id="nl8-77-6rX"/>
                             </connections>
                         </slider>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qXR-Hn-j1R">
@@ -86,6 +86,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="127.33333333333333" height="181"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="rewind15"/>
+                                    <connections>
+                                        <action selector="handleBackward:" destination="sfJ-PH-afx" eventType="touchUpInside" id="7Re-LA-53S"/>
+                                    </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2aI-k7-qHJ">
                                     <rect key="frame" x="127.33333333333334" y="0.0" width="127.33333333333334" height="181"/>
@@ -99,6 +102,9 @@
                                     <rect key="frame" x="254.66666666666671" y="0.0" width="127.33333333333334" height="181"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="forward15"/>
+                                    <connections>
+                                        <action selector="handleForward:" destination="sfJ-PH-afx" eventType="touchUpInside" id="cdn-bt-cHN"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </stackView>
@@ -106,13 +112,16 @@
                             <rect key="frame" x="0.0" y="727" width="382" height="75"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lowvolume" translatesAutoresizingMaskIntoConstraints="NO" id="uke-mY-pQS">
-                                    <rect key="frame" x="0.0" y="0.0" width="3" height="75"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="75"/>
                                 </imageView>
-                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="koM-Jy-An1">
-                                    <rect key="frame" x="1" y="0.0" width="308" height="76"/>
+                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="koM-Jy-An1">
+                                    <rect key="frame" x="-2" y="0.0" width="312" height="76"/>
+                                    <connections>
+                                        <action selector="handleVolumeChange:" destination="sfJ-PH-afx" eventType="valueChanged" id="RQE-8I-WhY"/>
+                                    </connections>
                                 </slider>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highvolume" translatesAutoresizingMaskIntoConstraints="NO" id="W6g-O7-BdQ">
-                                    <rect key="frame" x="307" y="0.0" width="75" height="75"/>
+                                    <rect key="frame" x="308" y="0.0" width="74" height="75"/>
                                 </imageView>
                             </subviews>
                         </stackView>

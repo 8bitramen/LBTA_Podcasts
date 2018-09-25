@@ -124,20 +124,68 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     @IBOutlet weak var totalDurationLabel: UILabel!
     
     
-    @IBAction func slider(_ sender: UISlider) {
+    @IBAction func handleCurrentTimeSlideChange(_ sender: UISlider) {
         
-        print(sender.value)
+//        print(sender.value)
         
-        let currentTime = CMTimeGetSeconds(player.currentTime())
-        let totalDuration = CMTimeGetSeconds((player.currentItem?.duration)!)
+//        let currentTime = CMTimeGetSeconds(player.currentTime())
+//        let totalDuration = CMTimeGetSeconds((player.currentItem?.duration)!)
+//
+//        let seekToTime = Double(currentTime / totalDuration)
+//
+//        print(seekToTime)
+//
+//        player.currentItem?.seek(to: CMTime(seconds: seekToTime, preferredTimescale: 2), completionHandler: { (completed) in
+//                self.slider.value = Float(seekToTime)
+//        })
         
-        let seekToTime = Double(currentTime / totalDuration)
+        let percentage = slider.value
+        guard let duration = player.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = durationInSeconds * Float64(percentage)
+        let seekTime = CMTimeMake(value: Int64(seekTimeInSeconds), timescale: 1)
         
-        
+        player.seek(to: seekTime)
 
-        player.currentItem?.seek(to: CMTime(seconds: seekToTime, preferredTimescale: 2), completionHandler: { (completed) in
-                self.slider.value = Float(seekToTime)
-        })
+    }
+    
+    
+    @IBAction func handleBackward(_ sender: UIButton) {
+        let secondsBack15 = CMTimeMake(value: 15, timescale: 1)
+        let currentTime = player.currentTime()
+        let secondsToGo = CMTimeGetSeconds(currentTime) - CMTimeGetSeconds(secondsBack15)
+        if secondsToGo < 0 {
+            let goToTime = CMTimeMake(value: Int64(0), timescale: 1)
+            player.seek(to: goToTime)
+        } else {
+            let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
+            player.seek(to: goToTime)
+        }
+    }
+    
+    
+    @IBAction func handleForward(_ sender: UIButton) {
+        let secondsNext15 = CMTimeMake(value: 15, timescale: 1)
+        guard let duration = player.currentItem?.duration else { return }
+        let totalDuration = CMTimeGetSeconds(duration)
+        let currentTime = player.currentTime()
+        let secondsToGo = CMTimeGetSeconds(currentTime) + CMTimeGetSeconds(secondsNext15)
+        if secondsToGo > totalDuration {
+            let goToTime = CMTimeMake(value: Int64(totalDuration), timescale: 1)
+            player.seek(to: goToTime)
+        } else {
+            let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
+            player.seek(to: goToTime)
+        }
+
+        
+    }
+    
+    
+    @IBAction func handleVolumeChange(_ sender: UISlider) {
+        
+        player.volume = sender.value
+        print("Playing at volume: \(sender.value * 100)")
         
     }
     
