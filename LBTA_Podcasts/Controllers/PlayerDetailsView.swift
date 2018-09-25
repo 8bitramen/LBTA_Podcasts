@@ -12,6 +12,9 @@ import AVKit
 
 class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
+
+    //MARK:- Properties
+    
     var episode: Episode!  {
         didSet {
             titleLabel.text = episode.title
@@ -22,24 +25,29 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         }
     }
     
-    var isPlaying = true
+    let player: AVPlayer = {
+        let avPlayer = AVPlayer()
+        avPlayer.automaticallyWaitsToMinimizeStalling = false
+        return avPlayer
+    }()
+
+    //MARK:- Outlets
     
-    
-    fileprivate func observePlayerCurrentTime() {
-        let interval = CMTimeMake(value: 1, timescale: 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
-            
-            self.currentDurationLabel.text = time.toDisplayString()
-            self.totalDurationLabel.text = self.player.currentItem?.duration.toDisplayString()
-            self.updateCurrentTimeSLider()
-            
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var currentDurationLabel: UILabel!
+    @IBOutlet weak var totalDurationLabel: UILabel!
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var episodeImageView: UIImageView! {
+        didSet {
+            episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            episodeImageView.layer.cornerRadius = 20
+            episodeImageView.clipsToBounds = true
         }
     }
     
-    func updateCurrentTimeSLider() {
-        let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
-        slider.value = Float(percentage)
-    }
+    //MARK:- Functions
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -49,39 +57,56 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         let time = CMTime(value: 1, timescale: 3)
         let times = [NSValue(time: time)]
         player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+            [weak self] in
             print("Started playing the episode ...")
-            self.enlargeEpisodeImageView()
+            self?.enlargeEpisodeImageView()
         }
     }
-
-    @IBAction func dismissButton(_ sender: UIButton) {
-//        player.pause()
-//        self.removeFromSuperview()
+    
+    func playEpisode(withUrl: String) {
+        print("Tryingto play: ", withUrl)
         
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
-        }) { (_) in
-            self.removeFromSuperview()
-        }
+        guard let url = URL(string: withUrl) else { return }
+        let playerItem = AVPlayerItem(url: url)
+        player.replaceCurrentItem(with: playerItem)
+        player.play()
         
     }
     
     fileprivate func enlargeEpisodeImageView() {
-            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.episodeImageView.transform = .identity
-            }, completion: nil)
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.episodeImageView.transform = .identity
+        }, completion: nil)
     }
     
     fileprivate func shrinkEpisodeImageView() {
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         }, completion: nil)
-
-
+        
+        
     }
     
+    fileprivate func observePlayerCurrentTime() {
+        let interval = CMTimeMake(value: 1, timescale: 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+            
+            self?.currentDurationLabel.text = time.toDisplayString()
+            self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
+            self?.updateCurrentTimeSLider()
+            
+        }
+    }
+    
+    func updateCurrentTimeSLider() {
+        let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
+        slider.value = Float(percentage)
+    }
+    
+    //MARK:- Actions
+    
     @IBAction func playOrPause(sender: UIButton) {
-
+        
         
         if player.timeControlStatus == .playing {
             player.pause()
@@ -96,49 +121,19 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             enlargeEpisodeImageView()
             
         }
-//        isPlaying = !isPlaying
+    }
 
+    @IBAction func dismissButton(_ sender: UIButton) {
         
-//        isPlaying ? player.pause() : player.play()
-//        isPlaying = !isPlaying
-    }
-    
-    @IBOutlet weak var titleLabel: UILabel!
-    
-    @IBOutlet weak var episodeImageView: UIImageView! {
-        didSet {
-            episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-            episodeImageView.layer.cornerRadius = 20
-            episodeImageView.clipsToBounds = true
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
+        }) { (_) in
+            self.removeFromSuperview()
         }
+        
     }
-    
-    @IBOutlet weak var nameLabel: UILabel!
-    
-    
-    @IBOutlet weak var playPauseButton: UIButton!
-    
-    @IBOutlet weak var currentDurationLabel: UILabel!
-    
-    
-    @IBOutlet weak var totalDurationLabel: UILabel!
-    
     
     @IBAction func handleCurrentTimeSlideChange(_ sender: UISlider) {
-        
-//        print(sender.value)
-        
-//        let currentTime = CMTimeGetSeconds(player.currentTime())
-//        let totalDuration = CMTimeGetSeconds((player.currentItem?.duration)!)
-//
-//        let seekToTime = Double(currentTime / totalDuration)
-//
-//        print(seekToTime)
-//
-//        player.currentItem?.seek(to: CMTime(seconds: seekToTime, preferredTimescale: 2), completionHandler: { (completed) in
-//                self.slider.value = Float(seekToTime)
-//        })
-        
         let percentage = slider.value
         guard let duration = player.currentItem?.duration else { return }
         let durationInSeconds = CMTimeGetSeconds(duration)
@@ -189,27 +184,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
-    
-    @IBOutlet weak var slider: UISlider!
-    
-    
-    
-    
-    let player: AVPlayer = {
-        let avPlayer = AVPlayer()
-        avPlayer.automaticallyWaitsToMinimizeStalling = false
-        return avPlayer
-    }()
-    
-    
-    func playEpisode(withUrl: String) {
-        print("Tryingto play: ", withUrl)
-        
-        guard let url = URL(string: withUrl) else { return }
-        let playerItem = AVPlayerItem(url: url)
-        player.replaceCurrentItem(with: playerItem)
-        player.play()
-    
+    deinit {
+        print("DEINIT!!")
     }
     
 }
