@@ -80,11 +80,14 @@ class EpisodesController: UITableViewController {
 //        let episodePlayerController = EpisodePlayerController()
 //        navigationController?.pushViewController(episodePlayerController, animated: true)
 
-        let window = UIApplication.shared.keyWindow
-        let playerDetailsView = PlayerDetailsView.initFromNib()
-        playerDetailsView.frame = self.view.frame
+//        let window = UIApplication.shared.keyWindow
+        let playerDetailsView = PlayerDetailsView.shared
+//        playerDetailsView.frame = self.view.frame
+//        playerDetailsView.episode = nil
         playerDetailsView.episode = episode
-        window?.addSubview(playerDetailsView)
+//        window?.addSubview(playerDetailsView)
+        
+        playerDetailsView.maximizePlayerDetails(episode: episode)
         
     }
     

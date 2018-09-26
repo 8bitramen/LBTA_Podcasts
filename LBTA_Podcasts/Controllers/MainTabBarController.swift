@@ -8,10 +8,14 @@
 
 import UIKit
 
+var maximizedPlayerViewTopAnchor: NSLayoutConstraint!
+var minimizedPlayerViewTopAnchor: NSLayoutConstraint!
+
+
 class MainTabBarController: UITabBarController {
 
-    var maximizedPlayerViewTopAnchor: NSLayoutConstraint!
-    var minimizedPlayerViewTopAnchor: NSLayoutConstraint!
+//    var maximizedPlayerViewTopAnchor: NSLayoutConstraint!
+//    var minimizedPlayerViewTopAnchor: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +24,7 @@ class MainTabBarController: UITabBarController {
         
         setupPlayerDetailsView()
         
-        perform(#selector(maximizePlayerDetails), with: nil, afterDelay: 2)
+//        perform(#selector(maximizePlayerDetails), with: nil, afterDelay: 2)
         
     }
     
@@ -35,9 +39,7 @@ class MainTabBarController: UITabBarController {
     }
     
     fileprivate func setupPlayerDetailsView() {
-        let playerDetailsView = PlayerDetailsView.initFromNib()
-        //        playerDetailsView.frame = view.frame
-        playerDetailsView.backgroundColor = .red
+        let playerDetailsView = PlayerDetailsView.shared
         playerDetailsView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(playerDetailsView, belowSubview: tabBar)
         
@@ -52,31 +54,7 @@ class MainTabBarController: UITabBarController {
         playerDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64).isActive = true
         
     }
-    
-    @objc fileprivate func minimizePlayerDetails() {
         
-        maximizedPlayerViewTopAnchor.isActive = false
-        minimizedPlayerViewTopAnchor.isActive = true
-        
-        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.view.layoutIfNeeded()
-            }, completion: nil)
-
-    }
-    
-    @objc fileprivate func maximizePlayerDetails() {
-        
-        maximizedPlayerViewTopAnchor.isActive = true
-        maximizedPlayerViewTopAnchor.constant = 0
-        minimizedPlayerViewTopAnchor.isActive = false
-        
-        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-        
-    }
-
-    
     //MARK:- Helper Functions
     
     fileprivate func generateNavigationVontroller(with rootViewController: UIViewController, title: String, image: String) -> UIViewController {

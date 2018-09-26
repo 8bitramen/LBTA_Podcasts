@@ -15,6 +15,10 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
 
     //MARK:- Properties
     
+    static var shared = PlayerDetailsView.initFromNib()
+    
+    lazy var mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+    
     var episode: Episode!  {
         didSet {
             titleLabel.text = episode.title
@@ -50,12 +54,50 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     //MARK:- Functions
     
     static func initFromNib() -> PlayerDetailsView {
-        return Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+        return  Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
 
     }
     
+    func minimizePlayerDetails() {
+        
+        maximizedPlayerViewTopAnchor.isActive = false
+        minimizedPlayerViewTopAnchor.isActive = true
+        
+        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.mainTabBarController.tabBar.transform = .identity //CGAffineTransform(translationX: 0, y: 100)
+            self.layoutIfNeeded()
+        }, completion: nil)
+        
+    }
+    
+    func maximizePlayerDetails(episode: Episode!) {
+        
+        maximizedPlayerViewTopAnchor.isActive = true
+        maximizedPlayerViewTopAnchor.constant = 0
+        minimizedPlayerViewTopAnchor.isActive = false
+        
+        if episode != nil {
+            self.episode = episode
+        }
+        
+
+        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.mainTabBarController.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
+            self.layoutIfNeeded()
+        }, completion: nil)
+        
+        
+        
+    }
+    
+
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        addGestureRecognizer(tapGestureRecognizer)
         
         observePlayerCurrentTime()
         
@@ -66,6 +108,10 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             print("Started playing the episode ...")
             self?.enlargeEpisodeImageView()
         }
+    }
+    
+    @objc func handleTap() {
+        maximizePlayerDetails(episode: nil)
     }
     
     func playEpisode(withUrl: String) {
@@ -135,6 +181,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
 //        }) { (_) in
 //            self.removeFromSuperview()
 //        }
+        
+        minimizePlayerDetails()
         
     }
     
