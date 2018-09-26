@@ -20,6 +20,8 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
     var timer: Timer?
     
+    var activityIndicator = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,6 +58,7 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
             APIService.shared.fetchPodcasts(searchText: searchText) {
                 results in
                 self.results = results
+//                self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
             }
         }
@@ -105,5 +108,16 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
         episodesController.podcast = podcast
         navigationController?.pushViewController(episodesController, animated: true)
     }
+    
+//    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return (searchController.searchBar.text?.isEmpty ?? true) ? 0 : 50
+//    }
+//
+//    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+//        activityIndicator.color = .darkGray
+//        activityIndicator.startAnimating()
+//        return activityIndicator
+//    }
     
 }

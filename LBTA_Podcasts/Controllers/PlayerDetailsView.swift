@@ -49,6 +49,11 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     //MARK:- Functions
     
+    static func initFromNib() -> PlayerDetailsView {
+        return Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -125,11 +130,11 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
 
     @IBAction func dismissButton(_ sender: UIButton) {
         
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
-        }) { (_) in
-            self.removeFromSuperview()
-        }
+//        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
+//        }) { (_) in
+//            self.removeFromSuperview()
+//        }
         
     }
     

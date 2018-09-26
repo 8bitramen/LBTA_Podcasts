@@ -81,10 +81,10 @@ class EpisodesController: UITableViewController {
 //        navigationController?.pushViewController(episodePlayerController, animated: true)
 
         let window = UIApplication.shared.keyWindow
-        let playerDetailsView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
-            playerDetailsView.frame = self.view.frame
-            playerDetailsView.episode = episode
-            window?.addSubview(playerDetailsView)
+        let playerDetailsView = PlayerDetailsView.initFromNib()
+        playerDetailsView.frame = self.view.frame
+        playerDetailsView.episode = episode
+        window?.addSubview(playerDetailsView)
         
     }
     
