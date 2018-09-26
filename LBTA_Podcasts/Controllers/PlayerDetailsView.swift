@@ -23,9 +23,13 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         didSet {
             titleLabel.text = episode.title
             let url = URL(string: episode.imageUrl!)
+            
             episodeImageView.sd_setImage(with: url, completed: nil)
             nameLabel.text = episode.author
             playEpisode(withUrl: (episode.videoUrl)!)
+            
+            miniPlayerImageView.image = episodeImageView.image
+            miniPlayerEpisodeLabel.text = nameLabel.text
         }
     }
     
@@ -51,6 +55,14 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         }
     }
     
+    
+    @IBOutlet weak var maximizedStackView: UIStackView!
+    @IBOutlet weak var miniPlayerView: UIView!
+    @IBOutlet weak var miniPlayerImageView: UIImageView!
+    @IBOutlet weak var miniPlayerEpisodeLabel: UILabel!
+    @IBOutlet weak var miniPlayerPlayPauseButton: UIButton!
+    
+    
     //MARK:- Functions
     
     static func initFromNib() -> PlayerDetailsView {
@@ -60,18 +72,26 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     func minimizePlayerDetails() {
         
+//        maximizedStackView.isHidden = true
+//        miniPlayerView.isHidden = false
+
         maximizedPlayerViewTopAnchor.isActive = false
         minimizedPlayerViewTopAnchor.isActive = true
         
         UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.mainTabBarController.tabBar.transform = .identity //CGAffineTransform(translationX: 0, y: 100)
             self.layoutIfNeeded()
+            self.maximizedStackView.alpha = 0
+            self.miniPlayerView.alpha = 1
+
         }, completion: nil)
         
     }
     
     func maximizePlayerDetails(episode: Episode!) {
         
+//        maximizedStackView.isHidden = false
+//        miniPlayerView.isHidden = true
         maximizedPlayerViewTopAnchor.isActive = true
         maximizedPlayerViewTopAnchor.constant = 0
         minimizedPlayerViewTopAnchor.isActive = false
@@ -84,6 +104,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.mainTabBarController.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
             self.layoutIfNeeded()
+            self.maximizedStackView.alpha = 1
+            self.miniPlayerView.alpha = 0
+            
         }, completion: nil)
         
         
@@ -94,6 +117,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+//        miniPlayerView.isHidden = true
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGestureRecognizer.numberOfTapsRequired = 1
@@ -162,6 +187,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         if player.timeControlStatus == .playing {
             player.pause()
             playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
             print("Playing paused ...")
             shrinkEpisodeImageView()
             
@@ -169,6 +195,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             player.play()
             print("Playing resumed ...")
             playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             enlargeEpisodeImageView()
             
         }
@@ -176,13 +203,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
 
     @IBAction func dismissButton(_ sender: UIButton) {
         
-//        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//            self.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: self.frame.height)
-//        }) { (_) in
-//            self.removeFromSuperview()
-//        }
-        
         minimizePlayerDetails()
+//        maximizedStackView.isHidden = true
+//        miniPlayerView.isHidden = false
         
     }
     
