@@ -12,7 +12,7 @@ import AVKit
 
 class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
-
+    
     //MARK:- Properties
     
     static var shared = PlayerDetailsView.initFromNib()
@@ -38,7 +38,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         avPlayer.automaticallyWaitsToMinimizeStalling = false
         return avPlayer
     }()
-
+    
+    var panGesture: UIPanGestureRecognizer!
+    
     //MARK:- Outlets
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -67,14 +69,14 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     static func initFromNib() -> PlayerDetailsView {
         return  Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
-
+        
     }
     
     func minimizePlayerDetails() {
         
-//        maximizedStackView.isHidden = true
-//        miniPlayerView.isHidden = false
-
+        //        maximizedStackView.isHidden = true
+        //        miniPlayerView.isHidden = false
+        
         maximizedPlayerViewTopAnchor.isActive = false
         minimizedPlayerViewTopAnchor.isActive = true
         
@@ -83,15 +85,15 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self.layoutIfNeeded()
             self.maximizedStackView.alpha = 0
             self.miniPlayerView.alpha = 1
-
+            
         }, completion: nil)
         
     }
     
     func maximizePlayerDetails(episode: Episode!) {
         
-//        maximizedStackView.isHidden = false
-//        miniPlayerView.isHidden = true
+        //        maximizedStackView.isHidden = false
+        //        miniPlayerView.isHidden = true
         maximizedPlayerViewTopAnchor.isActive = true
         maximizedPlayerViewTopAnchor.constant = 0
         minimizedPlayerViewTopAnchor.isActive = false
@@ -100,7 +102,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self.episode = episode
         }
         
-
+        
         UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.mainTabBarController.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
             self.layoutIfNeeded()
@@ -113,19 +115,21 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
-
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-//        miniPlayerView.isHidden = true
+        //        miniPlayerView.isHidden = true
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGestureRecognizer.numberOfTapsRequired = 1
         addGestureRecognizer(tapGestureRecognizer)
         
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        addGestureRecognizer(panGestureRecognizer)
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        addGestureRecognizer(panGesture)
+        
+        panGesture.isEnabled = false
         
         observePlayerCurrentTime()
         
@@ -140,36 +144,45 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     @objc func handleTap() {
         maximizePlayerDetails(episode: nil)
+        panGesture.isEnabled = false
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-//        print(111)
         
         switch gesture.state {
-        case .began:
-            print("Pan began ..")
         case .changed:
-            let pan = gesture.translation(in: self.superview)
-            print(pan.y)
-            miniPlayerView.alpha = 1 + pan.y / 200
-            maximizedStackView.alpha = -pan.y / 200
-            self.transform = CGAffineTransform(translationX: 0, y: pan.y)
-            
+            handlePanChanged(gesture)
         case .ended:
-            print("pan ended ...")
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.transform = .identity
-                self.maximizedStackView.alpha = 0
-                self.miniPlayerView.alpha = 1
-
-            }, completion: nil)
-            
-
+            handlePanEnded(gesture)
         default:
             break
         }
         
+    }
+    
+    func handlePanChanged(_ gesture: UIPanGestureRecognizer) {
+        let pan = gesture.translation(in: self.superview)
+        miniPlayerView.alpha = 1 + pan.y / 200
+        maximizedStackView.alpha = -pan.y / 200
+        self.transform = CGAffineTransform(translationX: 0, y: pan.y)
+    }
+    
+    func handlePanEnded(_ gesture: UIPanGestureRecognizer) {
+        let pan = gesture.translation(in: self.superview)
+        let velocity = gesture.velocity(in: self.superview)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.transform = .identity
+            
+            if pan.y < -200 || velocity.y < -500 {
+                self.maximizePlayerDetails(episode: nil)
+                gesture.isEnabled = false
+            } else {
+                self.maximizedStackView.alpha = 0
+                self.miniPlayerView.alpha = 1
+            }
+            
+        }, completion: nil)
+
     }
     
     func playEpisode(withUrl: String) {
@@ -233,12 +246,13 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             
         }
     }
-
+    
     @IBAction func dismissButton(_ sender: UIButton) {
         
         minimizePlayerDetails()
-//        maximizedStackView.isHidden = true
-//        miniPlayerView.isHidden = false
+        panGesture.isEnabled = true
+        //        maximizedStackView.isHidden = true
+        //        miniPlayerView.isHidden = false
         
     }
     
@@ -250,7 +264,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         let seekTime = CMTimeMake(value: Int64(seekTimeInSeconds), timescale: 1)
         
         player.seek(to: seekTime)
-
+        
     }
     
     
@@ -281,7 +295,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
             player.seek(to: goToTime)
         }
-
+        
         
     }
     
