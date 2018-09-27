@@ -124,6 +124,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         tapGestureRecognizer.numberOfTapsRequired = 1
         addGestureRecognizer(tapGestureRecognizer)
         
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        addGestureRecognizer(panGestureRecognizer)
+        
         observePlayerCurrentTime()
         
         let time = CMTime(value: 1, timescale: 3)
@@ -137,6 +140,36 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     @objc func handleTap() {
         maximizePlayerDetails(episode: nil)
+    }
+    
+    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+//        print(111)
+        
+        switch gesture.state {
+        case .began:
+            print("Pan began ..")
+        case .changed:
+            let pan = gesture.translation(in: self.superview)
+            print(pan.y)
+            miniPlayerView.alpha = 1 + pan.y / 200
+            maximizedStackView.alpha = -pan.y / 200
+            self.transform = CGAffineTransform(translationX: 0, y: pan.y)
+            
+        case .ended:
+            print("pan ended ...")
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.transform = .identity
+                self.maximizedStackView.alpha = 0
+                self.miniPlayerView.alpha = 1
+
+            }, completion: nil)
+            
+
+        default:
+            break
+        }
+        
     }
     
     func playEpisode(withUrl: String) {

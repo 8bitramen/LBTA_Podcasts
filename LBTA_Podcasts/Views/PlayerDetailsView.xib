@@ -19,6 +19,13 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jst-2C-RDZ">
                     <rect key="frame" x="0.0" y="44" width="375" height="64"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZK-n3-LT1">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="0.66666666666666663"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="8KX-EV-wiK"/>
+                            </constraints>
+                        </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qw6-pb-pSv">
                             <rect key="frame" x="8" y="8" width="359" height="48"/>
                             <subviews>
@@ -61,9 +68,12 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="cZK-n3-LT1" secondAttribute="trailing" id="7Ah-k6-9kv"/>
+                        <constraint firstItem="cZK-n3-LT1" firstAttribute="leading" secondItem="Jst-2C-RDZ" secondAttribute="leading" id="IrY-OC-wKi"/>
                         <constraint firstItem="qw6-pb-pSv" firstAttribute="top" secondItem="Jst-2C-RDZ" secondAttribute="top" constant="8" id="Q9Z-oV-bHb"/>
                         <constraint firstAttribute="trailing" secondItem="qw6-pb-pSv" secondAttribute="trailing" constant="8" id="cec-4c-1yT"/>
                         <constraint firstAttribute="bottom" secondItem="qw6-pb-pSv" secondAttribute="bottom" constant="8" id="jPi-hO-OmP"/>
+                        <constraint firstItem="cZK-n3-LT1" firstAttribute="top" secondItem="Jst-2C-RDZ" secondAttribute="top" id="r5q-LW-vxa"/>
                         <constraint firstAttribute="height" constant="64" id="s5H-gw-oqm"/>
                         <constraint firstItem="qw6-pb-pSv" firstAttribute="leading" secondItem="Jst-2C-RDZ" secondAttribute="leading" constant="8" id="w2V-a7-4eJ"/>
                     </constraints>
