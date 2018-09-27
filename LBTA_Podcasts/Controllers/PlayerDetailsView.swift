@@ -40,6 +40,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }()
     
     var panGesture: UIPanGestureRecognizer!
+    var minimizePanGesture: UIPanGestureRecognizer!
     
     //MARK:- Outlets
     
@@ -73,10 +74,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     func minimizePlayerDetails() {
-        
-        //        maximizedStackView.isHidden = true
-        //        miniPlayerView.isHidden = false
-        
+                
         maximizedPlayerViewTopAnchor.isActive = false
         minimizedPlayerViewTopAnchor.isActive = true
         
@@ -115,21 +113,10 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
-    
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        //        miniPlayerView.isHidden = true
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        tapGestureRecognizer.numberOfTapsRequired = 1
-        addGestureRecognizer(tapGestureRecognizer)
-        
-        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        addGestureRecognizer(panGesture)
-        
-        panGesture.isEnabled = false
+        addGestures()
         
         observePlayerCurrentTime()
         
@@ -142,48 +129,6 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         }
     }
     
-    @objc func handleTap() {
-        maximizePlayerDetails(episode: nil)
-        panGesture.isEnabled = false
-    }
-    
-    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-        
-        switch gesture.state {
-        case .changed:
-            handlePanChanged(gesture)
-        case .ended:
-            handlePanEnded(gesture)
-        default:
-            break
-        }
-        
-    }
-    
-    func handlePanChanged(_ gesture: UIPanGestureRecognizer) {
-        let pan = gesture.translation(in: self.superview)
-        miniPlayerView.alpha = 1 + pan.y / 200
-        maximizedStackView.alpha = -pan.y / 200
-        self.transform = CGAffineTransform(translationX: 0, y: pan.y)
-    }
-    
-    func handlePanEnded(_ gesture: UIPanGestureRecognizer) {
-        let pan = gesture.translation(in: self.superview)
-        let velocity = gesture.velocity(in: self.superview)
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.transform = .identity
-            
-            if pan.y < -200 || velocity.y < -500 {
-                self.maximizePlayerDetails(episode: nil)
-                gesture.isEnabled = false
-            } else {
-                self.maximizedStackView.alpha = 0
-                self.miniPlayerView.alpha = 1
-            }
-            
-        }, completion: nil)
-
-    }
     
     func playEpisode(withUrl: String) {
         print("Tryingto play: ", withUrl)
@@ -310,5 +255,98 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     deinit {
         print("DEINIT!!")
     }
+    
+}
+
+
+extension PlayerDetailsView {
+    
+    // Gestures handling code
+    
+    fileprivate func addGestures() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        addGestureRecognizer(tapGestureRecognizer)
+        
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        miniPlayerView.addGestureRecognizer(panGesture)
+        
+        minimizePanGesture = UIPanGestureRecognizer(target: self, action: #selector(dismissPanGesture))
+        maximizedStackView.addGestureRecognizer(minimizePanGesture)
+    }
+    
+    
+    @objc func dismissPanGesture(_ gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case .changed:
+            let pan = gesture.translation(in: self.superview)
+            self.transform = CGAffineTransform(translationX: 0, y: pan.y)
+            maximizedStackView.alpha = 1 - pan.y / 200
+            
+        case .ended:
+            let pan = gesture.translation(in: self.superview)
+            let velocity = gesture.velocity(in: self.superview)
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                
+                if pan.y > 200 || velocity.y > 500 {
+                    self.transform = .identity
+                    self.minimizePlayerDetails()
+                    self.panGesture.isEnabled = true
+                } else {
+                    self.transform = .identity
+                    self.maximizedStackView.alpha = 1
+                }
+                
+            }, completion: nil)
+        default:
+            return
+        }
+    }
+    
+    @objc func handleTap() {
+        maximizePlayerDetails(episode: nil)
+        panGesture.isEnabled = false
+    }
+    
+    
+    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+        
+        switch gesture.state {
+        case .changed:
+            handlePanChanged(gesture)
+        case .ended:
+            handlePanEnded(gesture)
+        default:
+            break
+        }
+        
+    }
+    
+    func handlePanChanged(_ gesture: UIPanGestureRecognizer) {
+        let pan = gesture.translation(in: self.superview)
+        miniPlayerView.alpha = 1 + pan.y / 200
+        maximizedStackView.alpha = -pan.y / 200
+        self.transform = CGAffineTransform(translationX: 0, y: pan.y)
+    }
+    
+    func handlePanEnded(_ gesture: UIPanGestureRecognizer) {
+        let pan = gesture.translation(in: self.superview)
+        let velocity = gesture.velocity(in: self.superview)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            if pan.y < -200 || velocity.y < -500 {
+                self.maximizePlayerDetails(episode: nil)
+                self.transform = .identity
+                gesture.isEnabled = false
+            } else {
+                self.transform = .identity
+                self.maximizedStackView.alpha = 0
+                self.miniPlayerView.alpha = 1
+            }
+            
+        }, completion: nil)
+        
+    }
+
     
 }
