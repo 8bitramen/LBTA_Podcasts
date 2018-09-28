@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 import AVKit
+import MediaPlayer
 
 class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
@@ -32,6 +33,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             miniPlayerEpisodeLabel.text = nameLabel.text
         }
     }
+    
     
     let player: AVPlayer = {
         let avPlayer = AVPlayer()
@@ -74,7 +76,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     func minimizePlayerDetails() {
-                
+        
         maximizedPlayerViewTopAnchor.isActive = false
         minimizedPlayerViewTopAnchor.isActive = true
         
@@ -116,6 +118,10 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        setupRemoteControl()
+        
+        setupAudioSession()
+        
         addGestures()
         
         observePlayerCurrentTime()
@@ -129,6 +135,51 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         }
     }
     
+    fileprivate func setupRemoteControl() {
+    
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.player.play()
+            print("Should play podcast ...")
+            self.playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            self.miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            
+            return .success
+        }
+        
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.player.pause()
+            print("Should pause podcast ...")
+            self.playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            self.miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            
+            return .success
+        }
+        
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+
+            self.playOrPause(sender: UIButton())
+            return .success
+        }
+        
+        
+    
+    }
+    
+    fileprivate func setupAudioSession() {
+    
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let sessionErr {
+            print("Failed to obtain player session:", sessionErr)
+        }
+    }
+    
     
     func playEpisode(withUrl: String) {
         print("Tryingto play: ", withUrl)
@@ -137,6 +188,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         player.play()
+        print("Currently playing ...")
         
     }
     
