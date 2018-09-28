@@ -29,10 +29,27 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             nameLabel.text = episode.author
             playEpisode(withUrl: (episode.videoUrl)!)
             
-            miniPlayerImageView.image = episodeImageView.image
+//            miniPlayerImageView.image = episodeImageView.image
+            
+            miniPlayerImageView.sd_setImage(with: url) { (image, _, _, _) in
+                guard let image = image else { return }
+                
+                var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+                
+                let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (_) -> UIImage in
+                    return image
+                })
+                
+                nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            }
+            
             miniPlayerEpisodeLabel.text = nameLabel.text
+            
+            setupNowPlayingInfo()
         }
     }
+    
     
     
     let player: AVPlayer = {
@@ -72,6 +89,23 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     static func initFromNib() -> PlayerDetailsView {
         return  Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+        
+    }
+    
+    fileprivate func setupNowPlayingInfo() {
+        
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = episode.author
+       
+//        // TODO:- should check if setting up artwork wokrs this way, else do the code from the tutorial
+//
+//        let artwork = UIImageView()
+//        artwork.image = episodeImageView.image
+//        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork.image
+        
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         
     }
     
@@ -166,8 +200,6 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             return .success
         }
         
-        
-    
     }
     
     fileprivate func setupAudioSession() {
@@ -214,7 +246,24 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
             self?.updateCurrentTimeSLider()
             
+            self?.setupLockScreenCurrentTime()
+            
         }
+    }
+    
+    private func setupLockScreenCurrentTime() {
+        
+        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+        guard let currentItem = player.currentItem else { return }
+        
+        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
+        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+        
+        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        
     }
     
     func updateCurrentTimeSLider() {
