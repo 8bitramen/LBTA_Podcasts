@@ -29,14 +29,20 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             nameLabel.text = episode.author
             playEpisode(withUrl: (episode.videoUrl)!)
             
+            miniPlayerEpisodeLabel.text = nameLabel.text
+            
+            setupNowPlayingInfo()
+            
 //            miniPlayerImageView.image = episodeImageView.image
+            
+            miniPlayerImageView.sd_setImage(with: url, completed: nil)
             
             miniPlayerImageView.sd_setImage(with: url) { (image, _, _, _) in
                 guard let image = image else { return }
                 
                 var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
                 
-                let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (_) -> UIImage in
+                let artwork = MPMediaItemArtwork(boundsSize: .zero, requestHandler: { (size) -> UIImage in
                     return image
                 })
                 
@@ -44,9 +50,6 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
             }
             
-            miniPlayerEpisodeLabel.text = nameLabel.text
-            
-            setupNowPlayingInfo()
         }
     }
     
@@ -149,24 +152,38 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        setupRemoteControl()
-        
-        setupAudioSession()
         
         addGestures()
         
         observePlayerCurrentTime()
         
+        observeBoundaryTime()
+        
+        setupRemoteControl()
+        
+        setupAudioSession()
+
+    }
+    
+    fileprivate func observeBoundaryTime() {
         let time = CMTime(value: 1, timescale: 3)
         let times = [NSValue(time: time)]
         player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
             [weak self] in
             print("Started playing the episode ...")
             self?.enlargeEpisodeImageView()
+            self?.setupLockScreenDuration()
         }
+    }
+
+    fileprivate func setupLockScreenDuration() {
+        guard let duration = player.currentItem?.duration else { return }
+        let durationSeconds = CMTimeGetSeconds(duration)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationSeconds
     }
     
     fileprivate func setupRemoteControl() {
@@ -180,6 +197,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self.playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             
+            self.setupElapsedTime()
+            
             return .success
         }
         
@@ -189,6 +208,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             print("Should pause podcast ...")
             self.playPauseButton.setImage(UIImage(named: "play"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            
+            self.setupElapsedTime()
             
             return .success
         }
@@ -202,11 +223,17 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
+    fileprivate func setupElapsedTime() {
+        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+    }
+    
     fileprivate func setupAudioSession() {
     
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
             try AVAudioSession.sharedInstance().setActive(true)
+            print("obtained audoo session ...")
         } catch let sessionErr {
             print("Failed to obtain player session:", sessionErr)
         }
@@ -246,25 +273,25 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
             self?.updateCurrentTimeSLider()
             
-            self?.setupLockScreenCurrentTime()
+//            self?.setupLockScreenCurrentTime()
             
         }
     }
     
-    private func setupLockScreenCurrentTime() {
-        
-        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
-        guard let currentItem = player.currentItem else { return }
-        
-        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
-        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
-        
-        let elapsedTime = CMTimeGetSeconds(player.currentTime())
-        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-        
-    }
+//    private func setupLockScreenCurrentTime() {
+//
+//        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+//        guard let currentItem = player.currentItem else { return }
+//
+//        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
+//        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+//
+//        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+//        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+//
+//        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+//
+//    }
     
     func updateCurrentTimeSLider() {
         let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
