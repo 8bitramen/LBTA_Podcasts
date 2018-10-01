@@ -336,6 +336,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         let seekTimeInSeconds = durationInSeconds * Float64(percentage)
         let seekTime = CMTimeMake(value: Int64(seekTimeInSeconds), timescale: 1)
         
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = seekTimeInSeconds
+        
         player.seek(to: seekTime)
         
     }
