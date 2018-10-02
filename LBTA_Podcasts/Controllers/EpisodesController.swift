@@ -77,17 +77,11 @@ class EpisodesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = self.episodes[indexPath.row]
-//        let episodePlayerController = EpisodePlayerController()
-//        navigationController?.pushViewController(episodePlayerController, animated: true)
-
-//        let window = UIApplication.shared.keyWindow
         let playerDetailsView = PlayerDetailsView.shared
-//        playerDetailsView.frame = self.view.frame
-//        playerDetailsView.episode = nil
         playerDetailsView.episode = episode
-//        window?.addSubview(playerDetailsView)
+        playerDetailsView.playlistEpisodes = episodes
         
-        playerDetailsView.maximizePlayerDetails(episode: episode)
+        playerDetailsView.maximizePlayerDetails(episode: episode, playlistEpisodes: episodes)
         
     }
     

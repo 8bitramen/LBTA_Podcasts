@@ -33,7 +33,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             
             setupNowPlayingInfo()
             
-//            miniPlayerImageView.image = episodeImageView.image
+            //            miniPlayerImageView.image = episodeImageView.image
             
             miniPlayerImageView.sd_setImage(with: url, completed: nil)
             
@@ -63,6 +63,8 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     
     var panGesture: UIPanGestureRecognizer!
     var minimizePanGesture: UIPanGestureRecognizer!
+    
+    var playlistEpisodes = [Episode]()
     
     //MARK:- Outlets
     
@@ -100,12 +102,12 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = episode.author
-       
-//        // TODO:- should check if setting up artwork wokrs this way, else do the code from the tutorial
-//
-//        let artwork = UIImageView()
-//        artwork.image = episodeImageView.image
-//        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork.image
+        
+        //        // TODO:- should check if setting up artwork wokrs this way, else do the code from the tutorial
+        //
+        //        let artwork = UIImageView()
+        //        artwork.image = episodeImageView.image
+        //        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork.image
         
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
@@ -127,7 +129,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
     }
     
-    func maximizePlayerDetails(episode: Episode!) {
+    func maximizePlayerDetails(episode: Episode!, playlistEpisodes: [Episode] = []) {
         
         //        maximizedStackView.isHidden = false
         //        miniPlayerView.isHidden = true
@@ -138,6 +140,21 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         if episode != nil {
             self.episode = episode
         }
+        
+        self.playlistEpisodes = playlistEpisodes
+        
+        //        if playlistEpisodes.count > 0 {
+        //
+        //            let indexOfPlaylist = playlistEpisodes.firstIndex { (ep) -> Bool in
+        //                return (ep.author == episode.author && ep.title == episode.title) ? true : false
+        //            }
+        //
+        //            guard let index = indexOfPlaylist else { return }
+        //
+        //            self.episode = playlistEpisodes[index + 1]
+        //            print("Playing inde \(index + 1), with title \(self.episode.title)")
+        //
+        //        }
         
         
         UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -166,7 +183,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         setupRemoteControl()
         
         setupAudioSession()
-
+        
     }
     
     fileprivate func observeBoundaryTime() {
@@ -179,7 +196,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self?.setupLockScreenDuration()
         }
     }
-
+    
     fileprivate func setupLockScreenDuration() {
         guard let duration = player.currentItem?.duration else { return }
         let durationSeconds = CMTimeGetSeconds(duration)
@@ -187,7 +204,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     fileprivate func setupRemoteControl() {
-    
+        
         UIApplication.shared.beginReceivingRemoteControlEvents()
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.playCommand.isEnabled = true
@@ -216,11 +233,87 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
         commandCenter.togglePlayPauseCommand.isEnabled = true
         commandCenter.togglePlayPauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
-
+            
             self.playOrPause(sender: UIButton())
             return .success
         }
         
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.nextTrackCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            // add code here ...
+            
+            self.handleNextTrack()
+            
+            return .success
+        }
+        
+        commandCenter.previousTrackCommand.isEnabled = true
+        commandCenter.previousTrackCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            
+            self.handlePreviousTrack()
+            
+            return .success
+        }
+        
+    }
+    
+    fileprivate func handleNextTrack() {
+        
+        if playlistEpisodes.count > 0 {
+            
+            let indexOfPlaylist = playlistEpisodes.firstIndex { (ep) -> Bool in
+                return (ep.author == self.episode.author && ep.title == self.episode.title) ? true : false
+            }
+            
+            guard let index = indexOfPlaylist else { return }
+            
+            var episodeIndex = 0
+            
+            if index + 1 <= playlistEpisodes.count - 1 {
+                 episodeIndex = index + 1
+            } else {
+                 episodeIndex = 0
+            }
+            
+            self.episode = playlistEpisodes[episodeIndex]
+            
+            print("Playing inde \(episodeIndex), with title \(self.episode.title)")
+            
+        }
+        
+        
+        maximizePlayerDetails(episode: episode, playlistEpisodes: playlistEpisodes)
+        
+    }
+    
+    fileprivate func handlePreviousTrack() {
+        
+        if playlistEpisodes.count > 0 {
+            
+            let indexOfPlaylist = playlistEpisodes.firstIndex { (ep) -> Bool in
+                return (ep.author == self.episode.author && ep.title == self.episode.title) ? true : false
+            }
+            
+            guard let index = indexOfPlaylist else { return }
+            
+            var episodeIndex = 0
+            
+            if index - 1 >= 0 {
+                episodeIndex = index - 1
+            } else {
+                episodeIndex = playlistEpisodes.count - 1
+            }
+            
+            self.episode = playlistEpisodes[episodeIndex]
+            
+            print("Playing inde \(episodeIndex), with title \(self.episode.title)")
+            
+        }
+        
+        
+        maximizePlayerDetails(episode: episode, playlistEpisodes: playlistEpisodes)
+        
+
     }
     
     fileprivate func setupElapsedTime() {
@@ -229,7 +322,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     fileprivate func setupAudioSession() {
-    
+        
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -273,25 +366,25 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
             self?.updateCurrentTimeSLider()
             
-//            self?.setupLockScreenCurrentTime()
+            //            self?.setupLockScreenCurrentTime()
             
         }
     }
     
-//    private func setupLockScreenCurrentTime() {
-//
-//        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
-//        guard let currentItem = player.currentItem else { return }
-//
-//        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
-//        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
-//
-//        let elapsedTime = CMTimeGetSeconds(player.currentTime())
-//        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
-//
-//        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-//
-//    }
+    //    private func setupLockScreenCurrentTime() {
+    //
+    //        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+    //        guard let currentItem = player.currentItem else { return }
+    //
+    //        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
+    //        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+    //
+    //        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+    //        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+    //
+    //        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    //
+    //    }
     
     func updateCurrentTimeSLider() {
         let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
@@ -477,6 +570,6 @@ extension PlayerDetailsView {
         }, completion: nil)
         
     }
-
+    
     
 }
