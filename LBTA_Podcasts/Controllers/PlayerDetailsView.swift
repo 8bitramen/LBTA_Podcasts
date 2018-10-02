@@ -27,11 +27,13 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             
             episodeImageView.sd_setImage(with: url, completed: nil)
             nameLabel.text = episode.author
+            setupNowPlayingInfo()
+            setupAudioSession()
+            
             playEpisode(withUrl: (episode.videoUrl)!)
             
             miniPlayerEpisodeLabel.text = nameLabel.text
             
-            setupNowPlayingInfo()
             
             //            miniPlayerImageView.image = episodeImageView.image
             
@@ -182,9 +184,45 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
         setupRemoteControl()
         
-        setupAudioSession()
+        setupInterruptionObserver()
+        
         
     }
+    
+    fileprivate func setupInterruptionObserver() {
+    
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification, object: nil)
+        
+        
+    }
+    
+    @objc fileprivate func handleInterruption(notification: NSNotification) {
+        
+        print("Interruption observed ...")
+        
+        guard let userInfo = notification.userInfo else { return }
+        guard let type = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else { return }
+        if type == AVAudioSession.InterruptionType.began.rawValue {
+            print("Interruption began ...")
+            
+            playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            
+        } else {
+            print("Interruption ended ...")
+            
+            guard let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
+                
+            if options == AVAudioSession.InterruptionOptions.shouldResume.rawValue {
+                player.play()
+                playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+                miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+
+            }
+            
+        }
+    }
+        
     
     fileprivate func observeBoundaryTime() {
         let time = CMTime(value: 1, timescale: 3)
@@ -214,7 +252,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self.playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             
-            self.setupElapsedTime()
+            self.setupElapsedTime(playbackRate: 1)
             
             return .success
         }
@@ -226,7 +264,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             self.playPauseButton.setImage(UIImage(named: "play"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
             
-            self.setupElapsedTime()
+            self.setupElapsedTime(playbackRate: 0)
             
             return .success
         }
@@ -316,9 +354,11 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
 
     }
     
-    fileprivate func setupElapsedTime() {
+    fileprivate func setupElapsedTime(playbackRate: Float) {
         let elapsedTime = CMTimeGetSeconds(player.currentTime())
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = playbackRate
+
     }
     
     fileprivate func setupAudioSession() {
@@ -400,6 +440,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             player.pause()
             playPauseButton.setImage(UIImage(named: "play"), for: .normal)
             miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            self.setupElapsedTime(playbackRate: 0)
             print("Playing paused ...")
             shrinkEpisodeImageView()
             
@@ -408,6 +449,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             print("Playing resumed ...")
             playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
             miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            self.setupElapsedTime(playbackRate: 1)
             enlargeEpisodeImageView()
             
         }
