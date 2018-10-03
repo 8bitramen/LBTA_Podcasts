@@ -31,10 +31,13 @@ class MainTabBarController: UITabBarController {
     //MARK:- Setup Functions
     
     func setupViewControllers() {
+        let layout = UICollectionViewFlowLayout()
+        let favoritesViewController = FavoritesViewController(collectionViewLayout: layout)
+        
         viewControllers = [
-            generateNavigationVontroller(with: PodcastsSearchController(), title: "Search", image: "search"),
-            generateNavigationVontroller(with: FavoritesViewController(), title: "Favorites", image: "favorites"),
-            generateNavigationVontroller(with: DownloadsViewController(), title: "Downloads", image: "downloads")
+             generateNavigationVontroller(with: favoritesViewController, title: "Favorites", image: "favorites"),
+             generateNavigationVontroller(with: PodcastsSearchController(), title: "Search", image: "search"),
+             generateNavigationVontroller(with: DownloadsViewController(), title: "Downloads", image: "downloads")
         ]
     }
     
