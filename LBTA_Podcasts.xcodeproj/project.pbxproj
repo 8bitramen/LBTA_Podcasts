@@ -27,6 +27,7 @@
 		3F6E5CDC215386B80066151E /* EpisodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDB215386B80066151E /* EpisodeCell.xib */; };
 		3F6E5CDE215387000066151E /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDD215387000066151E /* EpisodeCell.swift */; };
 		3F6E5CE0215389BB0066151E /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E5CDF215389BB0066151E /* Episode.swift */; };
+		3F800A242164E98000B021EE /* FavoriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F800A232164E98000B021EE /* FavoriteCell.swift */; };
 		3FB6CC542154D40900B5F991 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB6CC532154D40900B5F991 /* String.swift */; };
 		3FB6CC562154D5FD00B5F991 /* RSSFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB6CC552154D5FD00B5F991 /* RSSFeed.swift */; };
 /* End PBXBuildFile section */
@@ -54,6 +55,7 @@
 		3F6E5CDB215386B80066151E /* EpisodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EpisodeCell.xib; sourceTree = "<group>"; };
 		3F6E5CDD215387000066151E /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		3F6E5CDF215389BB0066151E /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
+		3F800A232164E98000B021EE /* FavoriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCell.swift; sourceTree = "<group>"; };
 		3FB6CC532154D40900B5F991 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		3FB6CC552154D5FD00B5F991 /* RSSFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSFeed.swift; sourceTree = "<group>"; };
 		B34003314F9BEECDE5FCE8E3 /* Pods-LBTA_Podcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LBTA_Podcasts.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LBTA_Podcasts/Pods-LBTA_Podcasts.debug.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				3F6E5CDD215387000066151E /* EpisodeCell.swift */,
 				3F6E5CD721511BD50066151E /* PodcastCell.xib */,
 				3F6E5CCA214FB6220066151E /* SearchCell.swift */,
+				3F800A232164E98000B021EE /* FavoriteCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				3F6E5CC7214F92220066151E /* PodcastsSearchController.swift in Sources */,
 				3F6E5CD221510D200066151E /* APIService.swift in Sources */,
 				3F6E5CB3214F895B0066151E /* AppDelegate.swift in Sources */,
+				3F800A242164E98000B021EE /* FavoriteCell.swift in Sources */,
 				3F6D08F1215A1540007E78D0 /* CMTime.swift in Sources */,
 				3F6E5CDA215250520066151E /* EpisodesController.swift in Sources */,
 			);
