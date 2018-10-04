@@ -26,9 +26,12 @@ class EpisodesController: UITableViewController {
     
     fileprivate let cellId = "cellId"
     
+    let favoritedPodcastKey = "favoritedPodcastKey"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        setupFavoriteButton()
     }
     
     // MARK:- Setup Work
@@ -37,6 +40,30 @@ class EpisodesController: UITableViewController {
         let nib = UINib(nibName: "EpisodeCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellId)
         tableView.tableFooterView = UIView()
+    }
+    
+    func setupFavoriteButton() {
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleFavorite)),
+            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchSavePodcasts))
+            ]
+        
+        navigationItem.rightBarButtonItem?.tintColor = .magenta
+    }
+    
+    @objc fileprivate func handleFavorite() {
+        print("favorited! - saving into userfedaults")
+        guard let podcast = podcast else { return }
+        let data = NSKeyedArchiver.archivedData(withRootObject: podcast)
+        UserDefaults.standard.set(data, forKey: favoritedPodcastKey)
+    }
+    
+    @objc fileprivate func handleFetchSavePodcasts() {
+        print("Fetching saved Podcasts from UserDefaults ...")
+        guard let data = UserDefaults.standard.data(forKey: favoritedPodcastKey) else { return }
+        guard let savedPodcast = NSKeyedUnarchiver.unarchiveObject(with: data) as? Result.Podcast  else { return }
+        print("Fetched podcast name: \n Podcast Name\(savedPodcast.name ?? "") \n Podcast Author: \(savedPodcast.artistName ?? "") \n Podcast URL: \(savedPodcast.artWork ?? "")")
+    
     }
     
     
