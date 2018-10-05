@@ -13,6 +13,15 @@ class FavoriteCell: UICollectionViewCell {
     
     //MARK:- Properties
     
+    var podcast: Result.Podcast! {
+        didSet {
+            favoritePodcastLabel.text = podcast.name
+            favoritePodcastAuthor.text = podcast.artistName
+            let url = URL(string: podcast.artWork ?? "")
+            favoriteImageView.sd_setImage(with: url, completed: nil)
+        }
+    }
+    
     let favoriteImageView: UIImageView = {
         let fiv = UIImageView(image: UIImage(named: "downloads"))
         fiv.contentMode = .scaleAspectFit

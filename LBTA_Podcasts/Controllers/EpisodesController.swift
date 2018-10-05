@@ -25,9 +25,7 @@ class EpisodesController: UITableViewController {
     }
     
     fileprivate let cellId = "cellId"
-    
-    let favoritedPodcastKey = "favoritedPodcastKey"
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -53,17 +51,26 @@ class EpisodesController: UITableViewController {
     
     @objc fileprivate func handleFavorite() {
         print("favorited! - saving into userfedaults")
+        
         guard let podcast = podcast else { return }
-        let data = NSKeyedArchiver.archivedData(withRootObject: podcast)
-        UserDefaults.standard.set(data, forKey: favoritedPodcastKey)
+
+        var listOfPodcasts = UserDefaults.standard.savedPodcasts()
+        listOfPodcasts.append(podcast)
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts)
+        UserDefaults.standard.set(data, forKey: UserDefaults.favoritedPodcastKey)
     }
     
     @objc fileprivate func handleFetchSavePodcasts() {
         print("Fetching saved Podcasts from UserDefaults ...")
-        guard let data = UserDefaults.standard.data(forKey: favoritedPodcastKey) else { return }
-        guard let savedPodcast = NSKeyedUnarchiver.unarchiveObject(with: data) as? Result.Podcast  else { return }
-        print("Fetched podcast name: \n Podcast Name\(savedPodcast.name ?? "") \n Podcast Author: \(savedPodcast.artistName ?? "") \n Podcast URL: \(savedPodcast.artWork ?? "")")
+//        guard let data = UserDefaults.standard.data(forKey: favoritedPodcastKey) else { return }
+//        guard let savedPodcasts = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Result.Podcast]  else { return }
     
+        UserDefaults.standard.savedPodcasts().forEach {
+            print("Fetched podcast name: \n Podcast Name\($0.name ?? "") \n Podcast Author: \($0.artistName ?? "") \n Podcast URL: \($0.artWork ?? "") \n\n")
+            
+        }
+        
     }
     
     
