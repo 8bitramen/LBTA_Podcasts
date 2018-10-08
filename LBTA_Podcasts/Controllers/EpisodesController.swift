@@ -25,7 +25,7 @@ class EpisodesController: UITableViewController {
     }
     
     fileprivate let cellId = "cellId"
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -41,24 +41,65 @@ class EpisodesController: UITableViewController {
     }
     
     func setupFavoriteButton() {
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleFavorite)),
-            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchSavePodcasts))
-            ]
         
-        navigationItem.rightBarButtonItem?.tintColor = .magenta
+        // let's see if we have already saved this podcast in favorites
+        
+        guard let podcast = podcast else { return }
+        
+        let savedPodcasts = UserDefaults.standard.savedPodcasts()
+        
+        let hasFavorited = savedPodcasts.index(where: {
+            $0.artistName == self.podcast.artistName && $0.name == self.podcast.name
+        } ) != nil
+        
+        if hasFavorited {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "favorites"), style: .plain, target: nil, action: nil)
+            navigationItem.rightBarButtonItem?.tintColor = .magenta
+            
+        } else {
+            navigationItem.rightBarButtonItems = [
+                                UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleFavorite)),
+//                                UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchSavePodcasts))
+            ]
+
+        }
+        
     }
     
     @objc fileprivate func handleFavorite() {
         print("favorited! - saving into userfedaults")
         
+        setupFavoriteButton()
+        
         guard let podcast = podcast else { return }
 
         var listOfPodcasts = UserDefaults.standard.savedPodcasts()
-        listOfPodcasts.append(podcast)
         
-        let data = NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts)
-        UserDefaults.standard.set(data, forKey: UserDefaults.favoritedPodcastKey)
+        let hasFavorited = listOfPodcasts.index(where: {
+            $0.name == podcast.name && $0.artistName == podcast.artistName
+        }) != nil
+        
+        if !hasFavorited {
+            listOfPodcasts.append(podcast)
+        
+            let data = NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts)
+            UserDefaults.standard.set(data, forKey: UserDefaults.favoritedPodcastKey)
+            
+            showBadgeHighlight()
+
+        }
+        
+    }
+    
+    func showBadgeHighlight() {
+        
+        let tabItem = self.tabBarController?.tabBar.items![1]
+        tabItem?.badgeValue = "New"
+        
+//        MainTabBarController().viewControllers?[1].tabBarItem.badgeValue = "New"
+        
+//        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "New"
+    
     }
     
     @objc fileprivate func handleFetchSavePodcasts() {

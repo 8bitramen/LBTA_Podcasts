@@ -22,11 +22,17 @@ class FavoritesViewController: UICollectionViewController, UICollectionViewDeleg
         super.viewDidLoad()
         setupCollectionView()
         setupLongTapGesture()
+//        tabBarItem.badgeColor = .red
+//        tabBarItem.badgeValue = "New"
+//        tabBarItem.setBadgeTextAttributes([NSAttributedString.Key.strokeColor : UIColor.red], for: UIControl.State.highlighted)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        podcasts = UserDefaults.standard.savedPodcasts()
         collectionView.reloadData()
+        let tabItem = self.tabBarController?.tabBar.items![1]
+        tabItem?.badgeValue = nil
     }
     
     fileprivate func setupCollectionView() {
@@ -105,5 +111,12 @@ class FavoritesViewController: UICollectionViewController, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let podcast = podcasts[indexPath.item]
+        let episodesController = EpisodesController()
+        episodesController.podcast = podcast
+        navigationController?.pushViewController(episodesController, animated: true)
     }
 }
