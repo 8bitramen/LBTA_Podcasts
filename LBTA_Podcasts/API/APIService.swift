@@ -26,19 +26,21 @@ class APIService {
                 print(response.destinationURL?.absoluteString ?? "")
                 
                 // I want to update UserDefaults downloaded episodes with this temp file somehow ...
-                let downloadedEpisodes = UserDefaults.standard.savedEpisodes()
+                var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
                 guard let index = downloadedEpisodes.index(where: { $0.title == episode.title &&
                                                 $0.author == episode.author &&
                                                 $0.videoUrl == episode.videoUrl
                     
                 } ) else { return }
-                var episode = downloadedEpisodes[index]
-                episode.fileUrl = response.destinationURL?.absoluteString ?? ""
-                UserDefaults.standard.saveEpisode(episode: episode)
+                let ep = downloadedEpisodes[index]
+                downloadedEpisodes.remove(at: index)
+                ep.fileUrl = response.destinationURL?.absoluteString ?? ""
+                UserDefaults.standard.deleteEpisode(episode: episode)
+                UserDefaults.standard.saveEpisode(episode: ep)
                 
                 ////
-                let ep = UserDefaults.standard.savedEpisodes()[index]
-                print(ep.fileUrl)
+                let ep1 = UserDefaults.standard.savedEpisodes()[index]
+                print(ep1.fileUrl)
         }
     }
     
