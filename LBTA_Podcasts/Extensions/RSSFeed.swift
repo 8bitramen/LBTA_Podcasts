@@ -15,7 +15,7 @@ extension RSSFeed {
         
         var episodes = [Episode]()
         items?.forEach { (feedItem) in
-            var episode = Episode(feedItem: feedItem)
+            let episode = Episode(feedItem: feedItem)
             if episode.imageUrl == nil {
                 episode.imageUrl = imageUrl
             }

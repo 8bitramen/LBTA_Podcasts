@@ -15,6 +15,33 @@ class APIService {
     
     static let shared = APIService()
     
+    func downloadEpisode(episode: Episode) {
+        print("Downloading episode using Alamofire with url", episode.videoUrl ?? "")
+        
+        let downloadRequest = DownloadRequest.suggestedDownloadDestination()
+        
+        Alamofire.download(episode.videoUrl ?? "", to: downloadRequest).downloadProgress { (progress) in
+            print(progress.fractionCompleted)
+            }.response { (response) in
+                print(response.destinationURL?.absoluteString ?? "")
+                
+                // I want to update UserDefaults downloaded episodes with this temp file somehow ...
+                let downloadedEpisodes = UserDefaults.standard.savedEpisodes()
+                guard let index = downloadedEpisodes.index(where: { $0.title == episode.title &&
+                                                $0.author == episode.author &&
+                                                $0.videoUrl == episode.videoUrl
+                    
+                } ) else { return }
+                var episode = downloadedEpisodes[index]
+                episode.fileUrl = response.destinationURL?.absoluteString ?? ""
+                UserDefaults.standard.saveEpisode(episode: episode)
+                
+                ////
+                let ep = UserDefaults.standard.savedEpisodes()[index]
+                print(ep.fileUrl)
+        }
+    }
+    
     func fetchPodcasts(searchText: String, completionHandler: @escaping (Result) -> ()) {
         print("Fetching podcasts ...")
         

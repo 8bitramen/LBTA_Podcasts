@@ -30,7 +30,7 @@ class EpisodeCell: UITableViewCell {
             dateFormatter.dateFormat = "MMM dd, yyyy"
             episodeDate.text = dateFormatter.string(from: episode.date) //String(episode.date)
             episodeNameLabel.text = episode.title
-            episodeDescription.text = episode.description
+            episodeDescription.text = episode.epDescription
             let url = URL(string: episode.imageUrl!.toSecureHTTP())
             episodeImageView.sd_setImage(with: url, completed: nil)
             

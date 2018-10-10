@@ -44,7 +44,7 @@ class EpisodesController: UITableViewController {
         
         // let's see if we have already saved this podcast in favorites
         
-        guard let podcast = podcast else { return }
+        guard podcast != nil else { return }
         
         let savedPodcasts = UserDefaults.standard.savedPodcasts()
         
@@ -171,4 +171,19 @@ class EpisodesController: UITableViewController {
         return episodes.count > 0 ? 0 : 200
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let episode = episodes[indexPath.row]
+        let tableViewRowAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
+
+            UserDefaults.standard.saveEpisode(episode: episode)
+            
+            // download the podcast episode using alamofire
+            
+            APIService.shared.downloadEpisode(episode: episode)
+
+        }
+        return [tableViewRowAction]
+    }
+            
 }

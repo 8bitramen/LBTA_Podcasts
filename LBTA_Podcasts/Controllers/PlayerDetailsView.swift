@@ -30,7 +30,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             setupNowPlayingInfo()
             setupAudioSession()
             
-            playEpisode(withUrl: (episode.videoUrl)!)
+            playEpisode(withUrl: episode.fileUrl ?? (episode.videoUrl)!)
             
             miniPlayerEpisodeLabel.text = nameLabel.text
             
