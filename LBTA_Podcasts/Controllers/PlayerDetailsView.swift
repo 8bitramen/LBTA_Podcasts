@@ -30,7 +30,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             setupNowPlayingInfo()
             setupAudioSession()
             
-            playEpisode(withUrl: episode.fileUrl ?? (episode.videoUrl)!)
+            playEpisode()
             
             miniPlayerEpisodeLabel.text = nameLabel.text
             
@@ -190,7 +190,7 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     fileprivate func setupInterruptionObserver() {
-    
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification, object: nil)
         
         
@@ -212,17 +212,17 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             print("Interruption ended ...")
             
             guard let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
-                
+            
             if options == AVAudioSession.InterruptionOptions.shouldResume.rawValue {
                 player.play()
                 playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
                 miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
-
+                
             }
             
         }
     }
-        
+    
     
     fileprivate func observeBoundaryTime() {
         let time = CMTime(value: 1, timescale: 3)
@@ -308,9 +308,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             var episodeIndex = 0
             
             if index + 1 <= playlistEpisodes.count - 1 {
-                 episodeIndex = index + 1
+                episodeIndex = index + 1
             } else {
-                 episodeIndex = 0
+                episodeIndex = 0
             }
             
             self.episode = playlistEpisodes[episodeIndex]
@@ -351,14 +351,14 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
         
         maximizePlayerDetails(episode: episode, playlistEpisodes: playlistEpisodes)
         
-
+        
     }
     
     fileprivate func setupElapsedTime(playbackRate: Float) {
         let elapsedTime = CMTimeGetSeconds(player.currentTime())
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = playbackRate
-
+        
     }
     
     fileprivate func setupAudioSession() {
@@ -373,154 +373,175 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
     }
     
     
-    func playEpisode(withUrl: String) {
-        print("Tryingto play: ", withUrl)
+    func playEpisode() {
         
-        guard let url = URL(string: withUrl) else { return }
-        let playerItem = AVPlayerItem(url: url)
-        player.replaceCurrentItem(with: playerItem)
-        player.play()
-        print("Currently playing ...")
-        
-    }
-    
-    fileprivate func enlargeEpisodeImageView() {
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.episodeImageView.transform = .identity
-        }, completion: nil)
-    }
-    
-    fileprivate func shrinkEpisodeImageView() {
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-        }, completion: nil)
-        
-        
-    }
-    
-    fileprivate func observePlayerCurrentTime() {
-        let interval = CMTimeMake(value: 1, timescale: 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+        if episode.fileUrl != nil {
+            print("Trying to play episode with FILE URL: ", episode.fileUrl ?? "")
             
-            self?.currentDurationLabel.text = time.toDisplayString()
-            self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
-            self?.updateCurrentTimeSLider()
+            guard let fileUrl = URL(string: episode.fileUrl ?? "") else { return }
+            let fileName = fileUrl.lastPathComponent
             
-            //            self?.setupLockScreenCurrentTime()
+            guard var trueLocation = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
             
-        }
-    }
-    
-    //    private func setupLockScreenCurrentTime() {
-    //
-    //        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
-    //        guard let currentItem = player.currentItem else { return }
-    //
-    //        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
-    //        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
-    //
-    //        let elapsedTime = CMTimeGetSeconds(player.currentTime())
-    //        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
-    //
-    //        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-    //
-    //    }
-    
-    func updateCurrentTimeSLider() {
-        let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
-        slider.value = Float(percentage)
-    }
-    
-    //MARK:- Actions
-    
-    @IBAction func playOrPause(sender: UIButton) {
-        
-        
-        if player.timeControlStatus == .playing {
-            player.pause()
-            playPauseButton.setImage(UIImage(named: "play"), for: .normal)
-            miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
-            self.setupElapsedTime(playbackRate: 0)
-            print("Playing paused ...")
-            shrinkEpisodeImageView()
+            trueLocation.appendPathComponent(fileName)
             
-        } else {
+            print("True location is: ", trueLocation.absoluteString)
+            
+            let playerItem = AVPlayerItem(url: trueLocation)
+            player.replaceCurrentItem(with: playerItem)
             player.play()
-            print("Playing resumed ...")
-            playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
-            miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
-            self.setupElapsedTime(playbackRate: 1)
-            enlargeEpisodeImageView()
+
             
-        }
-    }
-    
-    @IBAction func dismissButton(_ sender: UIButton) {
-        
-        minimizePlayerDetails()
-        panGesture.isEnabled = true
-        //        maximizedStackView.isHidden = true
-        //        miniPlayerView.isHidden = false
-        
-    }
-    
-    @IBAction func handleCurrentTimeSlideChange(_ sender: UISlider) {
-        let percentage = slider.value
-        guard let duration = player.currentItem?.duration else { return }
-        let durationInSeconds = CMTimeGetSeconds(duration)
-        let seekTimeInSeconds = durationInSeconds * Float64(percentage)
-        let seekTime = CMTimeMake(value: Int64(seekTimeInSeconds), timescale: 1)
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = seekTimeInSeconds
-        
-        player.seek(to: seekTime)
-        
-    }
-    
-    
-    @IBAction func handleBackward(_ sender: UIButton) {
-        let secondsBack15 = CMTimeMake(value: 15, timescale: 1)
-        let currentTime = player.currentTime()
-        let secondsToGo = CMTimeGetSeconds(currentTime) - CMTimeGetSeconds(secondsBack15)
-        if secondsToGo < 0 {
-            let goToTime = CMTimeMake(value: Int64(0), timescale: 1)
-            player.seek(to: goToTime)
         } else {
-            let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
-            player.seek(to: goToTime)
-        }
-    }
-    
-    
-    @IBAction func handleForward(_ sender: UIButton) {
-        let secondsNext15 = CMTimeMake(value: 15, timescale: 1)
-        guard let duration = player.currentItem?.duration else { return }
-        let totalDuration = CMTimeGetSeconds(duration)
-        let currentTime = player.currentTime()
-        let secondsToGo = CMTimeGetSeconds(currentTime) + CMTimeGetSeconds(secondsNext15)
-        if secondsToGo > totalDuration {
-            let goToTime = CMTimeMake(value: Int64(totalDuration), timescale: 1)
-            player.seek(to: goToTime)
-        } else {
-            let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
-            player.seek(to: goToTime)
+            print("Tryingto play episode with URL: ", episode.videoUrl ?? "")
+        
+            guard let url = URL(string: episode.videoUrl ?? "") else { return }
+            let playerItem = AVPlayerItem(url: url)
+            player.replaceCurrentItem(with: playerItem)
+            player.play()
         }
         
+        print("Currently playing ...")
+    
+}
+
+fileprivate func enlargeEpisodeImageView() {
+    UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        self.episodeImageView.transform = .identity
+    }, completion: nil)
+}
+
+fileprivate func shrinkEpisodeImageView() {
+    UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        self.episodeImageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    }, completion: nil)
+    
+    
+}
+
+fileprivate func observePlayerCurrentTime() {
+    let interval = CMTimeMake(value: 1, timescale: 2)
+    player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
         
+        self?.currentDurationLabel.text = time.toDisplayString()
+        self?.totalDurationLabel.text = self?.player.currentItem?.duration.toDisplayString()
+        self?.updateCurrentTimeSLider()
+        
+        //            self?.setupLockScreenCurrentTime()
+        
+    }
+}
+
+//    private func setupLockScreenCurrentTime() {
+//
+//        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+//        guard let currentItem = player.currentItem else { return }
+//
+//        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
+//        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+//
+//        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+//        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+//
+//        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+//
+//    }
+
+func updateCurrentTimeSLider() {
+    let percentage = CMTimeGetSeconds(player.currentTime()) / CMTimeGetSeconds((player.currentItem?.duration) ?? CMTimeMake(value: 1, timescale: 1))
+    slider.value = Float(percentage)
+}
+
+//MARK:- Actions
+
+@IBAction func playOrPause(sender: UIButton) {
+    
+    
+    if player.timeControlStatus == .playing {
+        player.pause()
+        playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+        miniPlayerPlayPauseButton.setImage(UIImage(named: "play"), for: .normal)
+        self.setupElapsedTime(playbackRate: 0)
+        print("Playing paused ...")
+        shrinkEpisodeImageView()
+        
+    } else {
+        player.play()
+        print("Playing resumed ...")
+        playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+        miniPlayerPlayPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+        self.setupElapsedTime(playbackRate: 1)
+        enlargeEpisodeImageView()
+        
+    }
+}
+
+@IBAction func dismissButton(_ sender: UIButton) {
+    
+    minimizePlayerDetails()
+    panGesture.isEnabled = true
+    //        maximizedStackView.isHidden = true
+    //        miniPlayerView.isHidden = false
+    
+}
+
+@IBAction func handleCurrentTimeSlideChange(_ sender: UISlider) {
+    let percentage = slider.value
+    guard let duration = player.currentItem?.duration else { return }
+    let durationInSeconds = CMTimeGetSeconds(duration)
+    let seekTimeInSeconds = durationInSeconds * Float64(percentage)
+    let seekTime = CMTimeMake(value: Int64(seekTimeInSeconds), timescale: 1)
+    
+    MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = seekTimeInSeconds
+    
+    player.seek(to: seekTime)
+    
+}
+
+
+@IBAction func handleBackward(_ sender: UIButton) {
+    let secondsBack15 = CMTimeMake(value: 15, timescale: 1)
+    let currentTime = player.currentTime()
+    let secondsToGo = CMTimeGetSeconds(currentTime) - CMTimeGetSeconds(secondsBack15)
+    if secondsToGo < 0 {
+        let goToTime = CMTimeMake(value: Int64(0), timescale: 1)
+        player.seek(to: goToTime)
+    } else {
+        let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
+        player.seek(to: goToTime)
+    }
+}
+
+
+@IBAction func handleForward(_ sender: UIButton) {
+    let secondsNext15 = CMTimeMake(value: 15, timescale: 1)
+    guard let duration = player.currentItem?.duration else { return }
+    let totalDuration = CMTimeGetSeconds(duration)
+    let currentTime = player.currentTime()
+    let secondsToGo = CMTimeGetSeconds(currentTime) + CMTimeGetSeconds(secondsNext15)
+    if secondsToGo > totalDuration {
+        let goToTime = CMTimeMake(value: Int64(totalDuration), timescale: 1)
+        player.seek(to: goToTime)
+    } else {
+        let goToTime = CMTimeMake(value: Int64(secondsToGo), timescale: 1)
+        player.seek(to: goToTime)
     }
     
     
-    @IBAction func handleVolumeChange(_ sender: UISlider) {
-        
-        player.volume = sender.value
-        print("Playing at volume: \(sender.value * 100)")
-        
-    }
+}
+
+
+@IBAction func handleVolumeChange(_ sender: UISlider) {
     
-    deinit {
-        print("DEINIT!!")
-    }
+    player.volume = sender.value
+    print("Playing at volume: \(sender.value * 100)")
     
+}
+
+deinit {
+    print("DEINIT!!")
+}
+
 }
 
 

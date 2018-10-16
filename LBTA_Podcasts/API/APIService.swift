@@ -40,7 +40,7 @@ class APIService {
                 
                 ////
                 let ep1 = UserDefaults.standard.savedEpisodes()[index]
-                print(ep1.fileUrl)
+                print(ep1.fileUrl ?? "")
         }
     }
     
