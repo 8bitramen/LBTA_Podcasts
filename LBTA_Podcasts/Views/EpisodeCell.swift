@@ -22,6 +22,7 @@ class EpisodeCell: UITableViewCell {
             episodeDescription.numberOfLines = 2
         }
     }
+    @IBOutlet weak var progressLabel: UILabel!
     
     var episode: Episode! {
         didSet {
@@ -31,8 +32,11 @@ class EpisodeCell: UITableViewCell {
             episodeDate.text = dateFormatter.string(from: episode.date) //String(episode.date)
             episodeNameLabel.text = episode.title
             episodeDescription.text = episode.epDescription
-            let url = URL(string: episode.imageUrl!.toSecureHTTP())
+            guard let url = URL(string: episode.imageUrl ?? "".toSecureHTTP()) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
+            guard let progres = episode.downloadProgress else { return }
+            progressLabel.text = String(format: "%02d", progres)
+            
             
 //            podcastNameLabel.text = podcast.name
 //            artistNameLabel.text = podcast.artistName

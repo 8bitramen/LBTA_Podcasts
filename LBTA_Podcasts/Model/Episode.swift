@@ -20,6 +20,7 @@ class Episode: NSObject, Decodable, NSCoding {
     let author: String?
     var videoUrl: String?
     var fileUrl: String?
+    var downloadProgress: Double?
     
     init(feedItem: RSSFeedItem) {
         self.date = feedItem.pubDate ?? Date()

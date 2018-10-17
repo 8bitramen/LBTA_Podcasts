@@ -48,6 +48,14 @@
                             </label>
                         </subviews>
                     </stackView>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J0R-fS-rPh">
+                        <rect key="frame" x="32" y="38.5" width="76.5" height="34.5"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                        <color key="shadowColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <size key="shadowOffset" width="0.0" height="1"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Pb3-Rl-OvM" firstAttribute="leading" secondItem="GDZ-e9-zoV" secondAttribute="trailing" constant="8" id="1Vw-4X-BJ9"/>
@@ -55,6 +63,8 @@
                     <constraint firstItem="Pb3-Rl-OvM" firstAttribute="centerY" secondItem="AKW-tf-VWG" secondAttribute="centerY" id="LYb-aH-yMf"/>
                     <constraint firstItem="GDZ-e9-zoV" firstAttribute="leading" secondItem="AKW-tf-VWG" secondAttribute="leadingMargin" id="TNH-qi-hdu"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Pb3-Rl-OvM" secondAttribute="trailing" id="fxM-KR-Jdb"/>
+                    <constraint firstItem="J0R-fS-rPh" firstAttribute="centerX" secondItem="GDZ-e9-zoV" secondAttribute="centerX" id="gAw-n8-pfM"/>
+                    <constraint firstItem="J0R-fS-rPh" firstAttribute="centerY" secondItem="GDZ-e9-zoV" secondAttribute="centerY" id="wpz-tH-j7A"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -62,6 +72,7 @@
                 <outlet property="episodeDescription" destination="nAV-nZ-fev" id="paG-FD-dat"/>
                 <outlet property="episodeImageView" destination="GDZ-e9-zoV" id="8H8-eT-Wt7"/>
                 <outlet property="episodeNameLabel" destination="Sc5-Ez-SB7" id="3uQ-km-vLu"/>
+                <outlet property="progressLabel" destination="J0R-fS-rPh" id="zWj-MY-ZOH"/>
             </connections>
             <point key="canvasLocation" x="550.39999999999998" y="17.991004497751124"/>
         </tableViewCell>

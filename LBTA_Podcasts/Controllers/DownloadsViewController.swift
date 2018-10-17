@@ -1,6 +1,6 @@
 //
 //  DownloadsViewController.swift
-//  LBTA_Podcasts
+//  LBTA_Podcasts se
 //
 //  Created by Vlado Velkovski on 9/17/18.
 //  Copyright © 2018 Vlado Velkovski. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DownloadsViewController: UITableViewController {
+class DownloadsViewController: UITableViewController  {
     
     //MARK:- Properties
     
@@ -25,6 +25,7 @@ class DownloadsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        setupObservers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,6 +38,47 @@ class DownloadsViewController: UITableViewController {
         let nib = UINib(nibName: "EpisodeCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellId)
 //        tableView.tableFooterView = UIView()
+    }
+    
+    fileprivate func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
+    }
+    
+    @objc fileprivate func handleDownloadProgress(notification: Notification) {
+//        print("123")
+        guard let userInfo = notification.userInfo as? [String: Any] else { return }
+        guard let progress = userInfo["progress"] as? Double else { return }
+        guard let title = userInfo["title"] as? String else { return}
+        
+        print(progress, title)
+        
+        guard let rowIndex = episodes.index(where: {
+            $0.title == title
+        }) else { return }
+        
+        guard let episodeCell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)) as? EpisodeCell else { return }
+        episodeCell.progressLabel.isHidden = false
+        episodeCell.progressLabel.text = "\(Int(progress * 100))%"
+        
+        if progress == 1.0 {
+            episodeCell.progressLabel.isHidden = true
+        }
+    }
+    
+    @objc fileprivate func handleDownloadComplete(notification: Notification) {
+        print("333")
+        
+        guard let episodeDownloadComplete = notification.object as? APIService.EpisodeDownloadCompleteTuple else { return }
+        
+        guard let rowIndex = episodes.index(where: {
+            $0.title == episodeDownloadComplete.episodeTitle
+        }) else { return }
+        
+        episodes[rowIndex].fileUrl = episodeDownloadComplete.fileUrl
+        
+//        episodes = UserDefaults.standard.savedEpisodes()
+//        tableView.reloadData()
     }
     
     //MARK:- Tableview delegates and datasource

@@ -401,6 +401,9 @@ class PlayerDetailsView: UIView, AVAudioPlayerDelegate {
             player.play()
         }
         
+        playPauseButton.imageView?.image = UIImage(named: "pause")
+        miniPlayerPlayPauseButton.imageView?.image = UIImage(named: "pause")
+        
         print("Currently playing ...")
     
 }
